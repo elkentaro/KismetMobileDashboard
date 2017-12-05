@@ -8,9 +8,9 @@ Prerequisite: git-master level kismet. https://github.com/kismetwireless/kismet
 
  - git clone into the kismet git. ("/home/[whatever]/kismet") 
                     - git clone https://github.com/elkentaro/kismetmobiledashboard.git
-cd into kismetmobiledashboard
+- cd into kismetmobiledashboard
 
-sudo make install
+- sudo make install
 
 2.Access it via : http://localhost:2501/plugin/mobiledashboard
 
