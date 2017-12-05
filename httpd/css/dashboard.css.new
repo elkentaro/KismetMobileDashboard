@@ -1,0 +1,145 @@
+body{
+    overflow: hidden;
+    cursor:pointer;
+}
+
+
+
+div.k-p-db-header {
+    height: 20px;
+    background-color: #B0B0B0;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+div.k-p-db-grid {
+    height: calc(100vh - 40px);
+    background-color: #DFDFDF;
+}
+
+
+div.grid-inner {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0px;
+    background-color: #E0E0E1;
+}
+
+#channels.grid-inner {
+    height: 150px;
+    background-color:#E0E0E1;
+    margin-bottom: 0px;
+}
+
+div.k-p-db-bignum {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 30px;
+}
+
+div.k-p-db-bignum-arrows {
+    font-weight: bold;
+    margin-left: 20px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 30px;
+}
+
+div.k-p-db-subtitle {
+    font-size: 10px;
+    text-align: center;
+}
+
+div.k-p-db-middle {
+    min-width: 18px;
+    margin-left: -5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+i.k-p-db-up {
+    font-size: 18px;
+    color: green;
+}
+
+i.k-p-db-down {
+    font-size: 18px;
+    color: red;
+}
+
+div.channels {
+    height: 220px;
+}
+
+div.pps {
+    height: 80px;
+    min-height: 80px;
+    width: 100%;
+}
+
+.grid-item { 
+    width: 25%; 
+    background-color: #D0D0D0;
+}
+
+.grid-item--width2 { 
+    width: 50%; 
+}
+
+.grid-item--widthfull { 
+    width: 100%; 
+    margin-bottom: 0px;
+}
+
+.grid-item.grid-item--widthfull.channels {
+    height: 150px;
+}
+
+div.ui-layout-center {
+    height: calc(100vh - 260px);
+
+}
+
+div.utime_holder {
+    float: center;
+    text-align: right;
+    position: relative;
+
+}
+
+
+div.dataTables_filter {
+    margin-top: 2px;
+    float:right;
+    margin-bottom: 2px;
+
+}
+
+
+table.stripe.hover.dataTable.no-footer{
+    margin-bottom: 1px;
+}
+
+div.dataTables_scrollBody {
+    margin-top:0px;
+}
+
+
+div.k_cd_container {
+    margin-top: 10px;
+
+   
+}
+
+div.k_cd_banner {
+    padding-bottom: 8px;
+}
+
+
+#pcap_sidebar.k-sb-list-item {
+    visibility: hidden;
+}

@@ -1,0 +1,494 @@
+<html>
+<title>Kismet Mobile Dashboard</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no" />
+<meta name="Kismet Mobile Dashboard" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script src="/js/jquery-3.1.0.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/js/jquery.ajax.binary.js"></script>
+<script src="/js/jquery.jspanel-compiled.min.js"></script>
+<script src="/js/simple-expand.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.scroller.min.js"></script>
+<script src="/js/dataTables.scrollResize.js"></script>
+<script src="/js/dataTables.pageResize.js"></script>
+<script src="/js/dataTables.colReorder.min.js"></script>
+<script src="/js/dataTables.responsive.min.js"></script>
+<script src="/js/jquery.layout-latest.js"></script>
+<script src="/js/pushmenu.js"></script>
+<script src="/js/jquery.sparkline.min.js"></script>
+<script src="/js/raphael.min.js"></script>
+<script src="/js/morris.min.js"></script>
+<script src="/js/Chart.bundle.min.js"></script>
+<script src="/js/js.storage.min.js"></script>
+<script src="/js/tooltipster.bundle.min.js"></script>
+<script src="/js/kismet.utils.js"></script>
+<!-- Core UI elements that get loaded first, we need these for some of the kismet
+    UI base code unfortunately even if we don't implement them -->
+<script src="/js/kismet.ui.sidebar.js"></script>
+<script src="/js/kismet.ui.tabpane.js"></script>
+<script src="/js/kismet.ui.settings.js"></script>
+<script src="/js/kismet.ui.datasources.js"></script>
+<script src="/js/kismet.ui.js"></script>
+<script src="/js/kismet.ui.base.js"></script>
+<script src="/js/kismet.ui.gadgets.js"></script>
+<script src="/js/jquery.kismet.devicedata.js"></script>
+<script src="/js/jquery.kismet.messagebus.js"></script>
+<script src="/js/jquery.kismet.channeldisplay.js"></script>
+<script src="/js/kismet.ui.iconbar.js"></script>
+<script src="/js/jquery.kismet.alert.js"></script>
+<script src="/js/jquery.kismet.battery.js"></script>
+<script src="/js/jquery.kismet.auth.js"></script>
+<script src="/js/kismet.ui.dot11.js"></script>
+<!-- Local includes from our relative js dir -->
+<script src="js/packery.pkgd.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.jspanel.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/responsive.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/colReorder.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/morris.css" />
+<link rel="stylesheet" type="text/css" href="/css/pushmenu.css" />
+<link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.messagebus.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.channeldisplay.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.alert.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.battery.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.auth.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.channeldisplay.css" />
+<link rel="stylesheet" type="text/css" href="/css/reset.css" />
+<link rel="stylesheet" type="text/css" href="/css/text.css" />
+<link rel="stylesheet" type="text/css" href="/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/css/kismet.css" />
+<!-- Local includes from our relative css link -->
+<link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+<style type="text/css">
+/* Fix the hover-highlight of the device table */
+
+td.highlight {
+    background-color: #dddddd !important;
+}
+
+
+
+
+/* Accordion scroll */
+
+div.autosize {
+    min-height: 10px;
+    overflow: scroll;
+}
+</style>
+<script>
+var last_packets = 0;
+var last_devs = 0;
+var phys = ["IEEE802.11", "RTL433", "Z-Wave", "Bluetooth", "UAV"];
+var prevcount802 = 0;
+
+
+
+function getDeviceC() {
+
+
+
+    jQuery.ajax({
+            url: "/devices/summary/devices.json",
+            type: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            },
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                "json": "{\"fields\":[\"kismet.device.base.type\"]}",
+            },
+        })
+        .done(function(data, textStatus, jqXHR) {
+
+            console.log("device count HTTP Request Succeeded: " + jqXHR.status);
+
+            var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
+            var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged Device" }).length;
+            var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+            var BTLEC = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
+            var BREDRC = data.filter(function(data) { return data['kismet.device.base.type'] == "BR/EDR" }).length;
+
+
+            var BluetoothC = data.filter(function(data) { return data['kismet.device.base.type'] == "Bluetooth" }).length;
+
+
+            var RT433C = data.filter(function(data) { return data['kismet.device.base.type'] == "RT433" }).length;
+            var ZwaveC = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-wave" }).length;
+            var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
+            var UnknownC = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
+
+
+
+
+            $('#IEEE802Client').html(WclientC);
+
+            $('#IEEE802Bridge').html(WBridgeC);
+
+            $('#IEEE802AP').html(WAPC);
+
+            $('#Bluetooth').html(BluetoothC);
+            $('#BTLE').html(BTLEC);
+            $('#BREDR').html(BREDRC);
+
+
+            $('#RTL433').html(RT433C);
+            $('#UAV').html(UAVC);
+            $('#Zwave').html(ZwaveC);
+            $('#Unknown').html(UnknownC)
+
+
+
+
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("HTTP Request Failed");
+        })
+        .always(function() {
+            setTimeout(datasources, 1000);
+        })
+
+}
+
+
+
+
+
+
+
+
+
+function datasources() {
+    $.get("/datasource/all_sources.json")
+        .done(function(data) {
+            $('#numsources').html(data.length);
+
+            var chans = {};
+            for (var i = 0; i < data.length; i++) {
+                var ds = data[i];
+
+                for (var c in ds['kismet.datasource.channels']) {
+                    chans[ds['kismet.datasource.channels'][c]] = 1;
+                }
+            }
+
+            $('#numchans').html(Object.keys(chans).length);
+        })
+        .always(function() {
+            setTimeout(datasources, 1000);
+        });
+}
+
+function status() {
+    $.get("/system/status.json")
+
+        .done(function(data) {
+            var devices = data['kismet.system.devices.count'];
+            var utime = (new Date().getTime() / 1000) - data['kismet.system.timestamp.start_sec'];
+            utime = "System running for: " + Math.round(utime / 60) + " minutes.";
+
+            $('#utime').html(utime)
+
+            $('#numdevs').html(devices);
+
+            if (devices < last_devs) {
+                $('#devsup').hide();
+                $('#devssdown').show();
+            } else if (devices == last_devs) {
+                $('#devsup').hide();
+                $('#devsdown').hide();
+            } else {
+                $('#devsdown').hide();
+                $('#devsup').show();
+            }
+
+            last_devs = devices;
+
+            var now = (data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'] - 1) % 60;
+            var packets = data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec'][now];
+
+            $('#numpackets').html(packets);
+
+            if (packets < last_packets) {
+                $('#packetsup').hide();
+                $('#packetsdown').show();
+            } else {
+                $('#packetsdown').hide();
+                $('#packetsup').show();
+            }
+
+            last_packets = packets;
+
+            var simple_rrd =
+                kismet.RecalcRrdData(
+                    data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'],
+                    data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'],
+                    kismet.RRD_SECOND,
+                    data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec']);
+
+            var w = $('#pps').width();
+            var h = $('#pps').height();
+            var bw = w / 63;
+
+            w = Math.round(w) + 'px';
+            h = Math.round(h) + 'px';
+
+            // Render the sparkline
+            $('#pps').sparkline(simple_rrd, {
+                type: "bar",
+                width: w,
+                height: h,
+                barWidth: bw,
+                barColor: '#909090',
+                nullColor: '#000000',
+                zeroColor: '#000000'
+            });
+        })
+        .always(function() {
+            setTimeout(status, 1000);
+        });
+}
+
+
+
+
+
+$(function() {
+    // Set a global timeout
+    $.ajaxSetup({
+        timeout: 5000,
+        xhrFields: {
+            withCredentials: true
+        }
+    });
+    $.fn.dataTableExt.sErrMode = "console";
+    $("#packetsup").hide();
+    $("#packetsdown").hide();
+    $("#devsup").hide();
+    $("#devsdown").hide();
+    $('#pm_menu').pushmenu({ button: "#pm_open" });
+
+
+
+    kismet_ui_sidebar.MakeSidebar($('.k-sb-main'));
+
+    kismet_ui_tabpane.MakeTabPane($('#southpane-tabs'));
+
+
+
+    kismet_ui_iconbar.makeIconbar($('#iconbar'));
+
+    $('.grid').packery({
+        itemSelector: '.grid-item',
+        percentPosition: true,
+    });
+
+    kismet_ui_tabpane.MakeTabPane($('#southpane-tabs'));
+
+    kismet.GetDynamicIncludes().done(function() {
+
+
+
+        kismet_ui_iconbar.AddIconbarItem({
+            id: 'alert',
+            priority: 125,
+            createCallback: function(div) {
+                div.alert();
+            },
+        });
+
+
+        kismet_ui_iconbar.AddIconbarItem({
+            id: 'login',
+            priority: 100,
+            createCallback: function(div) {
+                div.loginwatcher();
+            }
+        });
+
+
+        kismet_ui_iconbar.AddIconbarItem({
+            id: 'battery',
+            priority: 150,
+            createCallback: function(div) {
+                div.battery();
+            }
+        });
+
+        kismet_ui_iconbar.makeIconbar($('#iconbar'));
+        datasources();
+
+        status();
+        $('#channels').channels();
+
+
+        getDeviceC();
+        var tablepar = {
+            "field": "kismet.device.base.name",
+            "title": "base name"
+        };
+
+        console.log("so tablepar is" + JSON.stringify(tablepar));
+        $('#devicedata').devicedata('#devices', tablepar);
+
+
+
+
+        kismet_ui.HealthCheck();
+    });
+
+
+
+});
+</script>
+</head>
+
+<body>
+    <div id="mainholder">
+        <div id="pm_menu" class="pm_hide pm_initial kismet_sidebar">
+            <div class="k-sb-header">
+                <h1>Kismet</h1>
+                <hr>
+            </div>
+            <div class="k-sb-main">
+            </div>
+        </div>
+        <div class="k-p-db-header">
+            <i id="pm_open" class="fa fa-bars k-sb-hamburger"></i>
+            <div class="topright_holder" id="iconbar"></div>
+            Kismet - Simplified Mobile Dashboard
+        </div>
+    
+        <div class="utime_holder" id="utime"></div>
+        
+        <div class="grid k-p-db-grid">
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="numsources">--</div>
+                    <div class="k-p-db-subtitle">Active Sources</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="numchans">--</div>
+                    <div class="k-p-db-subtitle">Channels</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum-arrows">
+                        <div class="k-p-db-middle" id="numpackets">--</div>
+                        <div class="k-p-db-middle">
+                            <i class="fa fa-chevron-up k-p-db-up" id="packetsup"></i>
+                            <i class="fa fa-chevron-down k-p-db-down" id="packetsdown"></i>
+                        </div>
+                    </div>
+                    <div class="k-p-db-subtitle">Packets/Sec</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum-arrows">
+                        <div class="k-p-db-middle" id="numdevs">--</div>
+                        <div class="k-p-db-middle">
+                            <i class="fa fa-chevron-up k-p-db-up" id="devsup"></i>
+                            <i class="fa fa-chevron-down k-p-db-down" id="devsdown"></i>
+                        </div>
+                    </div>
+                    <div class="k-p-db-subtitle">Total # of Devices</div>
+                </div>
+            </div>
+        </div>
+
+    
+ <div class="grid k-p-db-grid">
+       
+        <div class="grid k-p-db-grid-breakdown">
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="IEEE802AP">--</div>
+                    <div class="k-p-db-subtitle">802.11 APs</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="IEEE802Client">--</div>
+                    <div class="k-p-db-subtitle">802.11 Clients</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
+                    <div class="k-p-db-subtitle">802.11 Bridged Devics</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid k-p-db-grid-breakdown">
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="Bluetooth">--</div>
+                    <div class="k-p-db-subtitle">Bluetooth Devices</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="BTLE">--</div>
+                    <div class="k-p-db-subtitle">BTLE Devices</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="BREDR">--</div>
+                    <div class="k-p-db-subtitle">BR/EDR Devices</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="Z-Wave">--</div>
+                    <div class="k-p-db-subtitle">Z-wave Devices</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="RTL433">--</div>
+                    <div class="k-p-db-subtitle">RTL433</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="UAV">--</div>
+                    <div class="k-p-db-subtitle">UAV</div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="grid-inner">
+                    <div class="k-p-db-bignum" id="Unknown">--</div>
+                    <div class="k-p-db-subtitle">Unknown</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid-item grid-item--widthfull channels">
+        <div class="grid-inner" id="channels"></div>        
+
+
+        <div id="creditbar">
+            <p>Powered by many OSS components, see the <a href="/credit.html" target="_new">credits page</a></p>
+    </div>
+   </div>
+
+</body>
+
+</html>
