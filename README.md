@@ -7,7 +7,7 @@ Prerequisite: git-master level kismet. https://github.com/kismetwireless/kismet
 1.Installation.
 
  - git clone into the kismet git. ("/home/[whatever]/kismet") 
-                    - git clone https://github.com/elkentaro/kismetmobiledashboard.git
+                    
 - cd into kismetmobiledashboard
 
 - sudo make install
