@@ -1,6 +1,6 @@
-body{
+body {
     overflow: hidden;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 
@@ -16,8 +16,10 @@ div.k-p-db-header {
 }
 
 div.k-p-db-grid {
-    height: calc(100vh - 40px);
+
     background-color: #DFDFDF;
+
+    padding-bottom: 5px;
 }
 
 
@@ -30,7 +32,7 @@ div.grid-inner {
 
 #channels.grid-inner {
     height: 150px;
-    background-color:#E0E0E1;
+    background-color: #E0E0E1;
     margin-bottom: 0px;
 }
 
@@ -81,58 +83,57 @@ div.pps {
     width: 100%;
 }
 
-.grid-item { 
-    width: 25%; 
+.grid-item {
+    width: 25%;
     background-color: #D0D0D0;
 }
 
-.grid-item--width2 { 
-    width: 50%; 
+.grid-item--width2 {
+    width: 50%;
 }
 
-.grid-item--widthfull { 
-    width: 100%; 
+.grid-item--widthfull {
+    width: 100%;
     margin-bottom: 0px;
 }
 
 .grid-item.grid-item--widthfull.channels {
-    height: 150px;
+    height: 29px;
 }
 
 div.ui-layout-center {
     height: calc(100vh - 260px);
-
 }
 
 div.utime_holder {
     float: center;
     text-align: right;
     position: relative;
-
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 
 div.dataTables_filter {
     margin-top: 2px;
-    float:right;
+    float: right;
     margin-bottom: 2px;
-
 }
 
 
-table.stripe.hover.dataTable.no-footer{
+table.stripe.hover.dataTable.no-footer {
     margin-bottom: 1px;
 }
 
 div.dataTables_scrollBody {
-    margin-top:0px;
+    margin-top: 0px;
 }
 
 
 div.k_cd_container {
     margin-top: 10px;
-
-   
 }
 
 div.k_cd_banner {
@@ -142,4 +143,99 @@ div.k_cd_banner {
 
 #pcap_sidebar.k-sb-list-item {
     visibility: hidden;
+}
+
+div.k-p-db-grid-breakdown {
+    border-style: dashed;
+    border-color: black;
+    border-bottom: 3px;
+    background-color: #E0E0E1;
+}
+
+
+
+.breakdown {
+    padding-bottom: 40px;
+    background-color: #E0E0E1;
+    padding-top: 5px;
+    border-bottom-width-width: 3px;
+    border-color: red;
+    border-style: solid;
+    padding-bottom: 5px;
+}
+
+div.gridtitle {
+
+
+    font-size: 16px;
+    margin-left: 4px;
+    padding-left: 30px;
+    font-weight: bold;
+}
+
+.system {
+    border-bottom-width: 3px;
+    border-style: dashed;
+    padding-bottom: 5px;
+    background-color: blue;
+}
+
+.wlan {
+
+    background: url('images/wifi.png');
+    background-repeat: no-repeat;
+    margin-left: 3px;
+}
+
+.bluetooth {
+
+    background: url('images/bluetooth.png');
+    background-repeat: no-repeat;
+    margin-left: 3px;
+}
+
+
+.Other {
+
+    background: url('images/other.png');
+    background-repeat: no-repeat;
+    margin-left: 3px;
+}
+
+
+.wlanTotal {
+
+    color: green;
+}
+
+.bluetoothTotal {
+
+    color: #4283ed;
+}
+
+
+.OtherTotal {}
+
+
+
+.dataTables_filter {
+    visibility: hidden;
+    height: 0px;
+}
+
+
+.endspacer {
+    border-style: dashed;
+    border-color: #000000;
+    border-bottom-width: 3px;
+    padding-bottom: 5px;
+
+    margin-bottom: 5px;
+    background-color: #E0E0E1;
+}
+
+div.creditbar {
+    border-style: solid;
+    border-bottom-width: 4px;
+    border-top-width: 3px;
 }

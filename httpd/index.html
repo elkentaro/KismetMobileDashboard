@@ -2,6 +2,10 @@
 <title>Kismet Mobile Dashboard</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no" />
+<link rel="manifest" href="css/manifest/manifest.json">
+<link rel="apple-touch-icon" size="76x76" href="css/images/icon.png">
+<link rel="apple-touch-icon" size="120x120" href="css/images/icon.png">
+<link rel="apple-touch-icon" size="152x152" href="css/images/icon.png">
 <meta name="Kismet Mobile Dashboard" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -77,6 +81,7 @@ td.highlight {
 
 
 
+
 /* Accordion scroll */
 
 div.autosize {
@@ -114,6 +119,8 @@ function getDeviceC() {
             var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
             var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged Device" }).length;
             var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+            var WadHocC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-hoc / WDS " }).length;
+
             var BTLEC = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
             var BREDRC = data.filter(function(data) { return data['kismet.device.base.type'] == "BR/EDR" }).length;
 
@@ -126,6 +133,9 @@ function getDeviceC() {
             var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
             var UnknownC = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
 
+            var Wtotal = WclientC + WBridgeC + WAPC + WadHocC;
+            var Bluetotal = BTLEC + BREDRC;
+            var otherTotal = RT433C + ZwaveC + UAVC + UnknownC;
 
 
 
@@ -134,6 +144,9 @@ function getDeviceC() {
             $('#IEEE802Bridge').html(WBridgeC);
 
             $('#IEEE802AP').html(WAPC);
+            $('#IEEE802adHoc').html(WadHocC);
+
+
 
             $('#Bluetooth').html(BluetoothC);
             $('#BTLE').html(BTLEC);
@@ -143,7 +156,11 @@ function getDeviceC() {
             $('#RTL433').html(RT433C);
             $('#UAV').html(UAVC);
             $('#Zwave').html(ZwaveC);
-            $('#Unknown').html(UnknownC)
+            $('#Unknown').html(UnknownC);
+
+            $('#Wtotal').html(Wtotal);
+            $('#Bluetotal').html(Bluetotal);
+            $('#Othertotal').html(otherTotal);
 
 
 
@@ -153,7 +170,7 @@ function getDeviceC() {
             console.log("HTTP Request Failed");
         })
         .always(function() {
-            setTimeout(datasources, 1000);
+            setTimeout(getDeviceC, 5000);
         })
 
 }
@@ -183,7 +200,7 @@ function datasources() {
             $('#numchans').html(Object.keys(chans).length);
         })
         .always(function() {
-            setTimeout(datasources, 1000);
+            setTimeout(datasources, 5000);
         });
 }
 
@@ -193,6 +210,8 @@ function status() {
         .done(function(data) {
             var devices = data['kismet.system.devices.count'];
             var utime = (new Date().getTime() / 1000) - data['kismet.system.timestamp.start_sec'];
+            var utime2 = (new Date().getTime() /1000-data['kismet.system.timestamp.usec'])/60;
+
             utime = "System running for: " + Math.round(utime / 60) + " minutes.";
 
             $('#utime').html(utime)
@@ -253,10 +272,9 @@ function status() {
             });
         })
         .always(function() {
-            setTimeout(status, 1000);
+            setTimeout(status, 5000);
         });
 }
-
 
 
 
@@ -295,7 +313,7 @@ $(function() {
 
     kismet.GetDynamicIncludes().done(function() {
 
-
+     
 
         kismet_ui_iconbar.AddIconbarItem({
             id: 'alert',
@@ -331,14 +349,23 @@ $(function() {
 
 
         getDeviceC();
+
+
         var tablepar = {
             "field": "kismet.device.base.name",
             "title": "base name"
         };
 
-   
+        console.log("so tablepar is" + JSON.stringify(tablepar));
+
+        $('#devicedata').devicedata('#devices', tablepar);
+
+
+
+
         kismet_ui.HealthCheck();
     });
+    
 
 
 
@@ -361,10 +388,8 @@ $(function() {
             <div class="topright_holder" id="iconbar"></div>
             Kismet - Simplified Mobile Dashboard
         </div>
-    
         <div class="utime_holder" id="utime"></div>
-        
-        <div class="grid k-p-db-grid">
+        <div class="grid k-p-db-grid system">
             <div class="grid-item">
                 <div class="grid-inner">
                     <div class="k-p-db-bignum" id="numsources">--</div>
@@ -402,88 +427,96 @@ $(function() {
                 </div>
             </div>
         </div>
-
-    
- <div class="grid k-p-db-grid">
-       
-        <div class="grid k-p-db-grid-breakdown">
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="IEEE802AP">--</div>
-                    <div class="k-p-db-subtitle">802.11 APs</div>
+        <div class="breakdown">
+            <div class="k-p-db-grid">
+                <div class="gridtitle wlan" id="802">802.11 Devices: <span class="WlanTotal" id="Wtotal">--</span> detected.</div>
+                <div class="grid k-p-db-grid-breakdown">
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="IEEE802AP">--</div>
+                            <div class="k-p-db-subtitle">802.11 APs</div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="IEEE802Client">--</div>
+                            <div class="k-p-db-subtitle">802.11 Clients</div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
+                            <div class="k-p-db-subtitle">802.11 Bridged Devics</div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="IEEE802adHoc">--</div>
+                            <div class="k-p-db-subtitle">802.11 AdHoc Devices</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="IEEE802Client">--</div>
-                    <div class="k-p-db-subtitle">802.11 Clients</div>
+            <div class="grid-inner" id="channels" style="padding-bottom:5px;"></div>
+            <div class="k-p-db-grid">
+                <div class="gridtitle bluetooth" id="bt">Bluetooth Devices: <span class="bluetoothTotal" id="Bluetotal">--</span> detected.</div>
+                <div class="grid k-p-db-grid-breakdown">
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="BTLE">--</div>
+                            <div class="k-p-db-subtitle">BTLE Devices</div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-inner">
+                            <div class="k-p-db-bignum" id="BREDR">--</div>
+                            <div class="k-p-db-subtitle">BR/EDR Devices</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
-                    <div class="k-p-db-subtitle">802.11 Bridged Devics</div>
+            <div class="k-p-db-grid">
+                <div class="gridtitle Other">Other Devices: <span class="otherTotal" id="Othertotal">--</span> detected.</div>
+            </div>
+            <div class="grid k-p-db-grid-breakdown">
+                <div class="grid-item">
+                    <div class="grid-inner">
+                        <div class="k-p-db-bignum" id="Z-Wave">--</div>
+                        <div class="k-p-db-subtitle">Z-wave Devices</div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-inner">
+                        <div class="k-p-db-bignum" id="RTL433">--</div>
+                        <div class="k-p-db-subtitle">RTL433</div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-inner">
+                        <div class="k-p-db-bignum" id="UAV">--</div>
+                        <div class="k-p-db-subtitle">UAV</div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-inner">
+                        <div class="k-p-db-bignum" id="Unknown">--</div>
+                        <div class="k-p-db-subtitle">Unknown*</div>
+                    </div>
                 </div>
             </div>
-
         </div>
+        <span style="text-align: right; padding-right:5px;">(*unkown= Empty kismet.device.base.type)</span>
+        <div class="endspacer"></div>
 
-        <div class="grid k-p-db-grid-breakdown">
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="Bluetooth">--</div>
-                    <div class="k-p-db-subtitle">Bluetooth Devices</div>
-                </div>
+                  <div class="ui-layout-center" id="main_center">
+                <table id="devices" class="stripe hover" cell-spacing="0" width="100%"></table>
             </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="BTLE">--</div>
-                    <div class="k-p-db-subtitle">BTLE Devices</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="BREDR">--</div>
-                    <div class="k-p-db-subtitle">BR/EDR Devices</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="Z-Wave">--</div>
-                    <div class="k-p-db-subtitle">Z-wave Devices</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="RTL433">--</div>
-                    <div class="k-p-db-subtitle">RTL433</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="UAV">--</div>
-                    <div class="k-p-db-subtitle">UAV</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="Unknown">--</div>
-                    <div class="k-p-db-subtitle">Unknown</div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-
-    <div class="grid-item grid-item--widthfull channels">
-        <div class="grid-inner" id="channels"></div>        
-
-
+            
         <div id="creditbar">
             <p>Powered by many OSS components, see the <a href="/credit.html" target="_new">credits page</a></p>
+        </div>
     </div>
-   </div>
-
 </body>
 
 </html>
