@@ -12,7 +12,9 @@ Prerequisite: git-master level kismet. https://github.com/kismetwireless/kismet
 
 - sudo make install
 
-2.Access it via : http://localhost:2501/plugin/mobiledashboard
+2.Access it via : http://localhost:2501/plugin/mobiledashboard/
+
+The trailing "/" is important. Without it you will get a 404.
 
 Its still very eary in development but it should work.
 
