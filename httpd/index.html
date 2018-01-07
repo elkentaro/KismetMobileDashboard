@@ -171,6 +171,7 @@ function getDeviceC() {
         })
         .always(function() {
             setTimeout(getDeviceC, 5000);
+
         })
 
 }
@@ -188,7 +189,21 @@ function datasources() {
         .done(function(data) {
 
         	var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
+            
             $('#numsources').html(SourceC);
+            
+            var SourceConfigC = (data.length);
+
+            if (SourceC < SourceConfigC) {
+            
+            	$('#numsources').addClass('error');
+            	$('#activeSources').addClass('error');			
+            } else {
+				$('#numsources').removeClass('error');
+            	$('#activeSources').removeClass('error');
+
+            }
+
 
             var chans = {};
             for (var i = 0; i < data.length; i++) {
@@ -395,7 +410,9 @@ $(function() {
             <div class="grid-item">
                 <div class="grid-inner">
                     <div class="k-p-db-bignum" id="numsources">--</div>
-                    <div class="k-p-db-subtitle">Active Sources</div>
+                    <div class="k-p-db-subtitle" id="activeSources">Active Sources</div>
+                   
+
                 </div>
             </div>
             <div class="grid-item">
@@ -509,11 +526,8 @@ $(function() {
         </div>
         <span style="text-align: right; padding-right:5px;">(*unkown= Empty kismet.device.base.type)</span>
         <div class="endspacer"></div>
-
-                  <div class="ui-layout-center" id="main_center">
-                <table id="devices" class="stripe hover" cell-spacing="0" width="100%"></table>
-            </div>
-
+        <div id="SourceErrorsTitle"></div>	
+        <div id="SourceErrors" class="error"></div>
             
         <div id="creditbar">
             <p>Powered by many OSS components, see the <a href="/credit.html" target="_new">credits page</a></p>
