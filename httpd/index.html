@@ -186,7 +186,9 @@ function getDeviceC() {
 function datasources() {
     $.get("/datasource/all_sources.json")
         .done(function(data) {
-            $('#numsources').html(data.length);
+
+        	var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
+            $('#numsources').html(SourceC);
 
             var chans = {};
             for (var i = 0; i < data.length; i++) {
