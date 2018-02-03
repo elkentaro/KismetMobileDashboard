@@ -88,17 +88,29 @@ div.autosize {
     min-height: 10px;
     overflow: scroll;
 }
+
+
+ 
+
+
+
 </style>
 <script>
+
+
+
 var last_packets = 0;
 var last_devs = 0;
 var phys = ["IEEE802.11", "RTL433", "Z-Wave", "Bluetooth", "UAV"];
 var prevcount802 = 0;
 
-
-
+	var WAP_Name=[];	
+	var CleanName=[];
+	var WAPC =0;
+	var APList=[];
+	var i=0;
 function getDeviceC() {
-
+		
 
 
     jQuery.ajax({
@@ -109,7 +121,7 @@ function getDeviceC() {
             },
             contentType: "application/x-www-form-urlencoded",
             data: {
-                "json": "{\"fields\":[\"kismet.device.base.type\"]}",
+                "json": "{\"fields\":[\"kismet.device.base.type\",\"kismet.device.base.name\",\"kismet.device.base.macaddr\"]}",
             },
         })
         .done(function(data, textStatus, jqXHR) {
@@ -118,7 +130,20 @@ function getDeviceC() {
 
             var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
             var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged" }).length;
-            var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+             WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+            
+
+			var WAP_NC = data.filter(function(data) { 
+				if ( data['kismet.device.base.type'] == "Wi-Fi AP" ) {
+				var	AP_id=data['kismet.device.base.macaddr'];
+				var AP_Name= data['kismet.device.base.name'];
+            	 AP_list(AP_id,AP_Name);
+            	 
+            }
+        });
+			
+
+			
             var WadHocC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-hoc / WDS " }).length;
 
             var BTLEC = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
@@ -162,7 +187,7 @@ function getDeviceC() {
             $('#Bluetotal').html(Bluetotal);
             $('#Othertotal').html(otherTotal);
 
-
+       
 
 
         })
@@ -220,6 +245,28 @@ function datasources() {
             setTimeout(datasources, 5000);
         });
 }
+
+
+
+function AP_list(AP_ID,APName) {
+var	AP_C_ID=AP_ID+APName;
+
+if ( APList.indexOf(AP_C_ID) === -1 ) {
+	console.log("id is" + AP_C_ID);
+	APList.push(AP_C_ID);
+
+$('#AP_Table').append('<tr><td>'+APName+'</td><td>'+AP_ID+'</td></tr>');
+
+}
+
+
+	
+ 	}
+
+ 
+
+
+
 
 function status() {
     $.get("/system/status.json")
@@ -375,10 +422,13 @@ $(function() {
 
         console.log("so tablepar is" + JSON.stringify(tablepar));
 
-        $('#devicedata').devicedata('#devices', tablepar);
 
-
-
+		$('#AP_Table').DataTable( {
+        scrollY:"200px",
+        scrollCollapse: true,
+        paging:false
+  	  } );
+	
 
         kismet_ui.HealthCheck();
     });
@@ -528,7 +578,14 @@ $(function() {
         <div class="endspacer"></div>
         <div id="SourceErrorsTitle"></div>	
         <div id="SourceErrors" class="error"></div>
-            
+<div >
+   
+        <table id="AP_Table" class="display" cellspacing="0" width="100%">
+        	<thead><tr><th>AP Mac Address</th><th>AP Name</th></tr></thead>
+        	<tr style="display: none"><td></td><td></td></tr>
+        	<tfoot><tr><th>AP Mac Address</th><th>AP Name</th></tr></tfoot>
+        </table>
+</div>
         <div id="creditbar">
             <p>Powered by many OSS components, see the <a href="/credit.html" target="_new">credits page</a></p>
         </div>
