@@ -425,8 +425,10 @@ $(function() {
 
 		$('#AP_Table').DataTable( {
         scrollY:"200px",
-        scrollCollapse: true,
+        scrollCollapse: false,
+        ordering:false,
         paging:false
+
   	  } );
 	
 
@@ -580,10 +582,10 @@ $(function() {
         <div id="SourceErrors" class="error"></div>
 <div >
    
-        <table id="AP_Table" class="display" cellspacing="0" width="100%">
+        <table id="AP_Table" class="display hover-highlight" cellspacing="0" width="100%">
         	<thead><tr><th>AP Mac Address</th><th>AP Name</th></tr></thead>
         	<tr style="display: none"><td></td><td></td></tr>
-        	<tfoot><tr><th>AP Mac Address</th><th>AP Name</th></tr></tfoot>
+    
         </table>
 </div>
         <div id="creditbar">
