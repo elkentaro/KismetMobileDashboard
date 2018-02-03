@@ -117,7 +117,7 @@ function getDeviceC() {
             console.log("device count HTTP Request Succeeded: " + jqXHR.status);
 
             var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
-            var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged Device" }).length;
+            var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged" }).length;
             var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
             var WadHocC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-hoc / WDS " }).length;
 
@@ -200,7 +200,7 @@ function datasources() {
             	$('#activeSources').addClass('error');			
             } else {
 				$('#numsources').removeClass('error');
-            	$('#activeSources').removeClass('error');
+            	$('#activeSources').remove†Class('error');
 
             }
 
