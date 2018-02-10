@@ -1,8 +1,9 @@
 # KismetMobileDashboard
 
+![screenshot](https://raw.githubusercontent.com/elkentaro/KismetMobileDashboard/master/kismetMobileV2.jpg)
 
 
-###Prerequisite: git-master level kismet. (https://github.com/kismetwireless/kismet)
+###Prerequisite: git-master level kismet. ([https://github.com/kismetwireless/kismet]())
 
 ## 1.Installation.
 
