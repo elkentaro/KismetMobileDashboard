@@ -3,7 +3,51 @@ body {
     cursor: pointer;
 }
 
+.Phead-0 {
+    font-size:12px;
+    font-weight: bold;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding-left: 10px;
+}
 
+.card-header {
+margin-top: 5px;
+padding:0.1rem 1.24rem;
+border-bottom-width: 0px;
+
+}
+
+.card {
+    margin-top: 3px;
+}
+
+.card-body{
+    padding: 0.25rem;
+}
+
+.KSM_header {
+background: url('images/icon.png');
+background-repeat: no-repeat;
+background-position: left;
+background-size:23px 23px;
+padding-top:5px;
+padding-left:30px;
+padding-bottom: 5px;
+vertical-align: center;
+color: black;
+font-weight: bold;
+margin-left:3px;
+
+}
+.gridchannel{
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 10px;
+    background-color: white;
+    height: 200px;
+    width:100%;
+}
 
 div.k-p-db-header {
     height: 20px;
@@ -45,7 +89,7 @@ div.k-p-db-bignum {
 
 div.k-p-db-bignum-arrows {
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 5px;
     font-size: 16px;
     text-align: center;
     line-height: 30px;
@@ -108,19 +152,24 @@ div.ui-layout-center {
 div.utime_holder {
     float: center;
     text-align: right;
-    position: relative;
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
-    margin-top: 5px;
+    padding-right: 30px
 }
 
 
 div.dataTables_filter {
-    margin-top: 2px;
+    margin-top: 5px;
     float: right;
     margin-bottom: 2px;
+    background-color: white;
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 10px;
 }
+
+
 
 
 table.stripe.hover.dataTable.no-footer {
@@ -133,13 +182,28 @@ div.dataTables_scrollBody {
 
 
 div.k_cd_container {
-    margin-top: 10px;
+    padding-top: 5px;
+    margin-top: 5px;
+    vertical-align: middle;
 }
 
 div.k_cd_banner {
-    padding-bottom: 8px;
+    padding-bottom: 35px;
+    background-color: white;
+    border-top: 2px;
+    border-style: dashed;
+    z-index: 1;
+    font-size: 10px;
 }
 
+div.k_cd_type {
+    visibility: hidden;
+}
+
+div.k_cd_picker {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 
 #pcap_sidebar.k-sb-list-item {
     visibility: hidden;
@@ -185,6 +249,7 @@ div.gridtitle {
     background: url('images/wifi.png');
     background-repeat: no-repeat;
     margin-left: 3px;
+    background-position: left center;
 }
 
 .bluetooth {
@@ -192,6 +257,7 @@ div.gridtitle {
     background: url('images/bluetooth.png');
     background-repeat: no-repeat;
     margin-left: 3px;
+    background-position: left center;
 }
 
 
@@ -204,8 +270,21 @@ div.gridtitle {
     background: url('images/other.png');
     background-repeat: no-repeat;
     margin-left: 3px;
+    background-position: left center;
 }
 
+.APHeader {
+    background: url('images/AP.png');
+    background-repeat: no-repeat;
+    margin-left: 3px;
+    margin-bottom: 0px;
+    background-position: left center;
+}
+
+
+.totalcount {
+    color: black;
+}
 
 .wlanTotal {
 
@@ -218,14 +297,15 @@ div.gridtitle {
 }
 
 
-.OtherTotal {}
 
 
+.panel-title {
 
-.dataTables_filter {
-    visibility: hidden;
-    height: 0px;
+    color: black;
 }
+
+
+
 
 
 .endspacer {
@@ -242,4 +322,118 @@ div.creditbar {
     border-style: solid;
     border-bottom-width: 4px;
     border-top-width: 3px;
+}
+
+
+
+
+.collapseAP .search-container {
+  float: right;
+  border: 1px;
+  height: 40px;
+  margin-bottom: 10px;
+ 
+}
+
+.collapseAP input[type=text] {
+  float: right;
+  padding: 10px;
+  margin-left:100px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-right: 2px;
+  border:1px;
+  border-style: solid;
+  font-size: 12px;
+}
+
+ .collapseAP .search-container button {
+  float: right;
+  padding: 10px 10px;
+  margin-top: 4px;
+  margin-right: 16px;
+    font-size: 20px;
+    background-color: white;
+  border: 1px;
+  cursor: pointer;
+}
+
+
+.fullscreen {
+bottom:0px;
+z-index: 9999;
+}
+
+.noclick {
+pointer-events: none;
+  cursor: default;
+}
+
+.backdown {
+top: -250px;
+margin-top:60px;
+
+}
+
+
+ .collapseAP .nav-container button {
+  float: left;
+  padding: 10px 10px;
+  margin-top: 4px;
+  margin-right: 16px;
+  font-size: 20px;
+    background-color: white;
+  border: 1px;
+  cursor: pointer;
+}
+
+
+
+.collapseAP {
+    width: 100%;
+}
+
+
+p.wordwrap {
+    width: 16em;
+    word-wrap: break-word;
+    vertical-align: center;
+}
+
+
+table .Client-num {
+    text-align: center;
+    white-space:nowrap;
+    font-size: 10px;
+}
+
+.details {
+    font-size: 10px;
+    background-color: white;
+    word-wrap: break-word;
+}
+
+th .Client-num {
+font-size: 10px;
+}
+
+table .Ap-Name {
+    text-align: left;
+    font-size: 10px;
+cursor: pointer;
+ }
+
+table {
+    width: 100%;
+}
+
+.sorting_1 {
+    word-wrap: break-word;
+}
+
+table .Mac-num {
+    text-align: center;
+    white-space: nowrap;
+    font-size: 10px;
+   
 }

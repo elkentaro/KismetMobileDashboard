@@ -6,6 +6,7 @@
 <link rel="apple-touch-icon" size="76x76" href="css/images/icon.png">
 <link rel="apple-touch-icon" size="120x120" href="css/images/icon.png">
 <link rel="apple-touch-icon" size="152x152" href="css/images/icon.png">
+<!-- add local bootstrap for UI -->
 <meta name="Kismet Mobile Dashboard" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,6 +48,7 @@
 <script src="/js/jquery.kismet.battery.js"></script>
 <script src="/js/jquery.kismet.auth.js"></script>
 <script src="/js/kismet.ui.dot11.js"></script>
+<script src="js/dataTables.pageResize.min.js">
 <!-- Local includes from our relative js dir -->
 <script src="js/packery.pkgd.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
@@ -69,48 +71,29 @@
 <link rel="stylesheet" type="text/css" href="/css/text.css" />
 <link rel="stylesheet" type="text/css" href="/css/layout.css" />
 <link rel="stylesheet" type="text/css" href="/css/kismet.css" />
+<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 <!-- Local includes from our relative css link -->
 <link rel="stylesheet" type="text/css" href="css/dashboard.css" />
-<style type="text/css">
-/* Fix the hover-highlight of the device table */
-
-td.highlight {
-    background-color: #dddddd !important;
-}
-
-
-
-
-
-/* Accordion scroll */
-
-div.autosize {
-    min-height: 10px;
-    overflow: scroll;
-}
-
-
- 
-
-
-
-</style>
 <script>
-
-
-
 var last_packets = 0;
 var last_devs = 0;
 var phys = ["IEEE802.11", "RTL433", "Z-Wave", "Bluetooth", "UAV"];
 var prevcount802 = 0;
 
-	var WAP_Name=[];	
-	var CleanName=[];
-	var WAPC =0;
-	var APList=[];
-	var i=0;
+var WAP_Name = [];
+var CleanName = [];
+var WAPC = 0;
+var APList = [];
+var i = 0;
+var AP_tableList = [];
+var AP_Details = [];
+
+
+
+
 function getDeviceC() {
-		
+
 
 
     jQuery.ajax({
@@ -121,29 +104,53 @@ function getDeviceC() {
             },
             contentType: "application/x-www-form-urlencoded",
             data: {
-                "json": "{\"fields\":[\"kismet.device.base.type\",\"kismet.device.base.name\",\"kismet.device.base.macaddr\"]}",
+                "json": "{\"fields\":[\"kismet.device.base.type\",\"kismet.device.base.key\",\"kismet.device.base.macaddr\",\"kismet.device.base.channel\",\"kismet.device.base.manuf\",\"kismet.device.base.name\",\"dot11.device/dot11.device.num_associated_clients\",\"dot11.device/dot11.device.associated_client_map\"]}",
             },
         })
+
+
+
+
+
         .done(function(data, textStatus, jqXHR) {
 
-            console.log("device count HTTP Request Succeeded: " + jqXHR.status);
+
 
             var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
             var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged" }).length;
-             WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
-            
 
-			var WAP_NC = data.filter(function(data) { 
-				if ( data['kismet.device.base.type'] == "Wi-Fi AP" ) {
-				var	AP_id=data['kismet.device.base.macaddr'];
-				var AP_Name= data['kismet.device.base.name'];
-            	 AP_list(AP_id,AP_Name);
-            	 
-            }
-        });
-			
+            var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
 
-			
+
+            var WAP_NC = data.filter(function(data) {
+                if (data['kismet.device.base.type'] == "Wi-Fi AP") {
+                    var AP_id = data['kismet.device.base.macaddr'];
+                    var AP_Name = data['kismet.device.base.name'];
+                    var APKey = data['kismet.device.base.key'];
+                    var AP_Cnum = data['dot11.device.num_associated_clients'];
+                    var AP_man = data['kismet.device.base.manuf'];
+                    var AP_cMap = data['dot11.device.associated_client_map'];
+                    var AP_Chan = data['kismet.device.base.channel']
+                  
+
+                    if (APList.indexOf(APKey) === -1) {
+                        APList.push(APKey);
+
+
+                        if (AP_Name.length > 30) {
+                            AP_Name = '<p class="wordwrap">' + AP_Name + '</p>';
+
+                        }
+
+                        AP_tableList.push([AP_Name, AP_id, AP_Cnum, AP_man, AP_Chan, AP_cMap]);
+
+                    }
+
+                }
+            });
+
+
+
             var WadHocC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-hoc / WDS " }).length;
 
             var BTLEC = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
@@ -161,7 +168,7 @@ function getDeviceC() {
             var Wtotal = WclientC + WBridgeC + WAPC + WadHocC;
             var Bluetotal = BTLEC + BREDRC;
             var otherTotal = RT433C + ZwaveC + UAVC + UnknownC;
-
+            var APTotal = APList.length;
 
 
             $('#IEEE802Client').html(WclientC);
@@ -186,8 +193,9 @@ function getDeviceC() {
             $('#Wtotal').html(Wtotal);
             $('#Bluetotal').html(Bluetotal);
             $('#Othertotal').html(otherTotal);
+            $('#APTotal').html(APTotal);
 
-       
+
 
 
         })
@@ -203,29 +211,25 @@ function getDeviceC() {
 
 
 
-
-
-
-
-
-
 function datasources() {
     $.get("/datasource/all_sources.json")
         .done(function(data) {
 
-        	var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
-            
+            var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
+
             $('#numsources').html(SourceC);
-            
+
             var SourceConfigC = (data.length);
 
             if (SourceC < SourceConfigC) {
-            
-            	$('#numsources').addClass('error');
-            	$('#activeSources').addClass('error');			
+
+                $('#numsources').addClass('error');
+                $('#activeSources').addClass('error');
+                $('#SourceErrors').html("Source Error Detected");
             } else {
-				$('#numsources').removeClass('error');
-            	$('#activeSources').removeClass('error');
+                $('#numsources').removeClass('error');
+                $('#activeSources').removeClass('error');
+                $('#SourceErrors').html("");
 
             }
 
@@ -247,36 +251,15 @@ function datasources() {
 }
 
 
-
-function AP_list(AP_ID,APName) {
-var	AP_C_ID=AP_ID+APName;
-
-if ( APList.indexOf(AP_C_ID) === -1 ) {
-	console.log("id is" + AP_C_ID);
-	APList.push(AP_C_ID);
-
-$('#AP_Table').append('<tr><td>'+APName+'</td><td>'+AP_ID+'</td></tr>');
-
-}
-
-
-	
- 	}
-
- 
-
-
-
-
 function status() {
     $.get("/system/status.json")
 
         .done(function(data) {
             var devices = data['kismet.system.devices.count'];
             var utime = (new Date().getTime() / 1000) - data['kismet.system.timestamp.start_sec'];
-            var utime2 = (new Date().getTime() /1000-data['kismet.system.timestamp.usec'])/60;
 
-            utime = "System running for: " + Math.round(utime / 60) + " minutes.";
+
+            utime = " Uptime: " + Math.round(utime / 60) + " minutes.";
 
             $('#utime').html(utime)
 
@@ -338,12 +321,15 @@ function status() {
         .always(function() {
             setTimeout(status, 5000);
         });
+
 }
 
 
 
-
 $(function() {
+
+
+
     // Set a global timeout
     $.ajaxSetup({
         timeout: 5000,
@@ -360,238 +346,416 @@ $(function() {
 
 
 
-    kismet_ui_sidebar.MakeSidebar($('.k-sb-main'));
-
-    kismet_ui_tabpane.MakeTabPane($('#southpane-tabs'));
-
-
-
-    kismet_ui_iconbar.makeIconbar($('#iconbar'));
-
-    $('.grid').packery({
-        itemSelector: '.grid-item',
-        percentPosition: true,
-    });
-
-    kismet_ui_tabpane.MakeTabPane($('#southpane-tabs'));
 
     kismet.GetDynamicIncludes().done(function() {
-
-     
-
-        kismet_ui_iconbar.AddIconbarItem({
-            id: 'alert',
-            priority: 125,
-            createCallback: function(div) {
-                div.alert();
-            },
-        });
-
-
-        kismet_ui_iconbar.AddIconbarItem({
-            id: 'login',
-            priority: 100,
-            createCallback: function(div) {
-                div.loginwatcher();
-            }
-        });
-
-
-        kismet_ui_iconbar.AddIconbarItem({
-            id: 'battery',
-            priority: 150,
-            createCallback: function(div) {
-                div.battery();
-            }
-        });
-
-        kismet_ui_iconbar.makeIconbar($('#iconbar'));
         datasources();
 
         status();
-        $('#channels').channels();
 
+        $('#channels').channels();
 
         getDeviceC();
 
 
-        var tablepar = {
-            "field": "kismet.device.base.name",
-            "title": "base name"
-        };
-
-        console.log("so tablepar is" + JSON.stringify(tablepar));
-
-
-		$('#AP_Table').DataTable( {
-        scrollY:"200px",
-        scrollCollapse: false,
-        ordering:false,
-        paging:false
-
-  	  } );
-	
-
         kismet_ui.HealthCheck();
+
+
+
+
     });
-    
 
 
 
 });
+
+
+
+
+
+
+
+
+
+$(function() {
+    $(".collapseAP").on('shown.bs.collapse', function(e) {
+
+       
+
+        $('#AP_Table').DataTable().destroy();
+
+        $('#AP_Table').DataTable({
+            scrollY:'200px',
+            "ordering": true,
+            "paging": false,
+ 
+            data: AP_tableList,
+            "bInfo": false,
+            "dom":'"collapseAP"t',
+            "columns": [
+                { "class": "AP-Name", "title": "AP Name", "orderable": true },
+                { "class": "Mac-num", "title": "BSSID", "orderable": true },
+                { "class": "Client-num", "title": "Clients", "orderable": true },
+                {"visible": false },
+                {"visible": false },
+                {"visible":false}
+
+            ]
+
+        }).columns.adjust().draw();
+        toggleFulscreenbtn();
+
+
+
+    });
+
+ 
+
+});
+
+$(function() {
+    $(".collapseAP").on('hide.bs.collapse', function(e) {
+        toggleFulscreenbtn();
+    });
+
+
+});
+
+function searchData() {
+    var searchString = document.getElementById('search').value;
+    $('#AP_Table').DataTable().search(searchString).draw();
+
+}
+
+function toggleFulscreenbtn() {
+    var x = document.getElementById('fullscreenbtn');
+    if (x.style.visibility === 'hidden') {
+        x.style.visibility = 'visible';
+    } else {
+        x.style.visibility = 'hidden';
+    }
+}
+
+
+
+function APFullScreen() {
+
+    if ($('#AP802').hasClass('fullscreen')) {
+
+        $('#click802').addClass('noclick');
+        $('#AP802').addClass('backdown', 1000, 'easeOutBounce');
+      
+        $('#AP802').removeClass('fullscreen');
+        var newHeight = ($(window).height()-140+'px');
+    
+ $('.AP_Table_wrapper').height(newHeight);
+        $('#AP_Table').DataTable().destroy();
+
+      var table=$('#AP_Table').DataTable({
+            scrollY:newHeight,
+            "ordering": true,
+            "paging": false,
+ 
+            data: AP_tableList,
+            "bInfo": false,
+            "dom":'"collapseAP"t',
+            "columns": [
+                { "class": "AP-Name", "title": "AP Name", "orderable": true },
+                { "class": "Mac-num", "title": "BSSID", "orderable": true },
+                { "class": "Client-num", "title": "Clients", "orderable": true },
+                {"visible": false },
+                {"visible": false },
+                {"visible":false}
+
+            ]
+
+        }).columns.adjust().draw();
+
+       
+        $('.panel-collapse_t').collapse('hide');
+
+        function format(d) {
+            // `d` is the original data object for the row
+            var keyt = "";
+
+            if (d[2] > 0) {
+                var obj = d[5];
+                var keys = Object.keys(obj);
+                for (i = 0; i < keys.length; i++) {
+                    keyt += keys[i] + "<br>";
+
+                }
+
+
+            } else {
+                keys = "-";
+                keyt = "-";
+            }
+  
+
+
+
+            return '<table class="table-sm table" style="margin-top:0px; padding-top:0px;">' +
+                '<tr class="details">' +
+                '<td>Manufacturer:</td>' +
+                '<td style="background-color:white;">' + d[3] + '</td>' +
+                '<td>Channel</td>' +
+                '<td class="details">' + d[4] + '</td>' +
+                '</tr>' +
+                '<tr class="details">' +
+                '<td>Associated Clients</td>' +
+                '<td class="details" colspan="3">' + keyt + '</td>' +
+                '</tr>' +
+
+                '</table>';
+        }
+
+
+
+
+       
+        $('#AP_Table tbody').on('click', 'tr', function() {
+            var tr = $(this);
+            var row = table.row(tr);
+            console.log("row clicked" + row.index());
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+            }
+
+
+
+        })
+
+
+
+
+    } else {
+        $('#AP802').addClass('fullscreen', 1000, 'easeOutBounce');
+        $('#AP802').removeClass('backdown');
+        $('#click802').removeClass('noclick');
+
+        $('#collapseAP').collapse('hide');
+        $('#Systemdetails').collapse('show');
+       $('#AP_Table').DataTable().destroy();
+    }
+
+
+
+
+
+
+}
 </script>
 </head>
 
 <body>
-    <div id="mainholder">
-        <div id="pm_menu" class="pm_hide pm_initial kismet_sidebar">
-            <div class="k-sb-header">
-                <h1>Kismet</h1>
-                <hr>
+    <div class="KSM_header">
+        Kismet - Simplified Mobile Dashboard
+    </div>
+    <!--Accordion wrapper-->
+    <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="SystemDetails">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#Systemdetails" aria-expanded="false" aria-controls="collapseOne">
+                    <h5 class="Phead-0">
+                    System Details:<span id="utime" class="totalcount"></span>
+                </h5>
+                </a>
             </div>
-            <div class="k-sb-main">
-            </div>
-        </div>
-        <div class="k-p-db-header">
-            <i id="pm_open" class="fa fa-bars k-sb-hamburger"></i>
-            <div class="topright_holder" id="iconbar"></div>
-            Kismet - Simplified Mobile Dashboard
-        </div>
-        <div class="utime_holder" id="utime"></div>
-        <div class="grid k-p-db-grid system">
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="numsources">--</div>
-                    <div class="k-p-db-subtitle" id="activeSources">Active Sources</div>
-                   
-
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum" id="numchans">--</div>
-                    <div class="k-p-db-subtitle">Channels</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum-arrows">
-                        <div class="k-p-db-middle" id="numpackets">--</div>
-                        <div class="k-p-db-middle">
-                            <i class="fa fa-chevron-up k-p-db-up" id="packetsup"></i>
-                            <i class="fa fa-chevron-down k-p-db-down" id="packetsdown"></i>
+            <!-- Card body -->
+            <div id="Systemdetails" class="panel-collapse_t collapse show" role="tabpanel" aria-labelledby="Systemdetails">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="numsources">--</div>
+                                <div class="k-p-db-subtitle" id="activeSources">Active Sources</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="numchans">--</div>
+                                <div class="k-p-db-subtitle">Channels</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum-arrows">
+                                    <div class="k-p-db-middle" id="numpackets">--</div>
+                                    <div class="k-p-db-middle">
+                                        <i class="fa fa-chevron-up k-p-db-up" id="packetsup"></i>
+                                        <i class="fa fa-chevron-down k-p-db-down" id="packetsdown"></i>
+                                    </div>
+                                </div>
+                                <div class="k-p-db-subtitle">Packets/Sec</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum-arrows">
+                                    <div class="k-p-db-middle" id="numdevs">--</div>
+                                    <div class="k-p-db-middle">
+                                        <i class="fa fa-chevron-up k-p-db-up" id="devsup"></i>
+                                        <i class="fa fa-chevron-down k-p-db-down" id="devsdown"></i>
+                                    </div>
+                                </div>
+                                <div class="k-p-db-subtitle">Total # of Devices</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="k-p-db-subtitle">Packets/Sec</div>
-                </div>
-            </div>
-            <div class="grid-item">
-                <div class="grid-inner">
-                    <div class="k-p-db-bignum-arrows">
-                        <div class="k-p-db-middle" id="numdevs">--</div>
-                        <div class="k-p-db-middle">
-                            <i class="fa fa-chevron-up k-p-db-up" id="devsup"></i>
-                            <i class="fa fa-chevron-down k-p-db-down" id="devsdown"></i>
+                        <div class="row">
+                            <div class="col">
+                                <div id="SourceErrorsTitle"></div>
+                                <div id="SourceErrors" class="error"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="k-p-db-subtitle">Total # of Devices</div>
-                </div>
-            </div>
-        </div>
-        <div class="breakdown">
-            <div class="k-p-db-grid">
-                <div class="gridtitle wlan" id="802">802.11 Devices: <span class="WlanTotal" id="Wtotal">--</span> detected.</div>
-                <div class="grid k-p-db-grid-breakdown">
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="IEEE802AP">--</div>
-                            <div class="k-p-db-subtitle">802.11 APs</div>
-                        </div>
-                    </div>
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="IEEE802Client">--</div>
-                            <div class="k-p-db-subtitle">802.11 Clients</div>
-                        </div>
-                    </div>
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
-                            <div class="k-p-db-subtitle">802.11 Bridged Devics</div>
-                        </div>
-                    </div>
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="IEEE802adHoc">--</div>
-                            <div class="k-p-db-subtitle">802.11 AdHoc Devices</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-inner" id="channels" style="padding-bottom:5px;"></div>
-            <div class="k-p-db-grid">
-                <div class="gridtitle bluetooth" id="bt">Bluetooth Devices: <span class="bluetoothTotal" id="Bluetotal">--</span> detected.</div>
-                <div class="grid k-p-db-grid-breakdown">
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="BTLE">--</div>
-                            <div class="k-p-db-subtitle">BTLE Devices</div>
-                        </div>
-                    </div>
-                    <div class="grid-item">
-                        <div class="grid-inner">
-                            <div class="k-p-db-bignum" id="BREDR">--</div>
-                            <div class="k-p-db-subtitle">BR/EDR Devices</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="k-p-db-grid">
-                <div class="gridtitle Other">Other Devices: <span class="otherTotal" id="Othertotal">--</span> detected.</div>
-            </div>
-            <div class="grid k-p-db-grid-breakdown">
-                <div class="grid-item">
-                    <div class="grid-inner">
-                        <div class="k-p-db-bignum" id="Z-Wave">--</div>
-                        <div class="k-p-db-subtitle">Z-wave Devices</div>
-                    </div>
-                </div>
-                <div class="grid-item">
-                    <div class="grid-inner">
-                        <div class="k-p-db-bignum" id="RTL433">--</div>
-                        <div class="k-p-db-subtitle">RTL433</div>
-                    </div>
-                </div>
-                <div class="grid-item">
-                    <div class="grid-inner">
-                        <div class="k-p-db-bignum" id="UAV">--</div>
-                        <div class="k-p-db-subtitle">UAV</div>
-                    </div>
-                </div>
-                <div class="grid-item">
-                    <div class="grid-inner">
-                        <div class="k-p-db-bignum" id="Unknown">--</div>
-                        <div class="k-p-db-subtitle">Unknown*</div>
                     </div>
                 </div>
             </div>
         </div>
-        <span style="text-align: right; padding-right:5px;">(*unkown= Empty kismet.device.base.type)</span>
-        <div class="endspacer"></div>
-        <div id="SourceErrorsTitle"></div>	
-        <div id="SourceErrors" class="error"></div>
-<div >
-   
-        <table id="AP_Table" class="display hover-highlight" cellspacing="0" width="100%">
-        	<thead><tr><th>AP Name</th><th>AP Mac Address</th></tr></thead>
-        	<tr style="display: none"><td></td><td></td></tr>
-    
-        </table>
-</div>
-        <div id="creditbar">
-            <p>Powered by many OSS components, see the <a href="/credit.html" target="_new">credits page</a></p>
+        <!-- Accordion card -->
+        <div id="datacard">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header wlan" role="tab" id="802heading">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#802details" aria-expanded="false" aria-controls="collapse802">
+                        <h5 class="Phead-0" id="802">
+                    802.11 Details: <span class="totalcount">( <span class="WlanTotal" id="Wtotal">--</span> devices detected. ) </span>
+                </h5>
+                    </a>
+                </div>
+                <!-- Card body -->
+                <div id="802details" class="panel-collapse_t collapse" role="tabpanel" aria-labelledby="802details">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="IEEE802AP">--</div>
+                                <div class="k-p-db-subtitle">802.11 APs</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="IEEE802Client">--</div>
+                                <div class="k-p-db-subtitle">802.11 Clients</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
+                                <div class="k-p-db-subtitle">802.11 Bridged Devices</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="IEEE802adHoc">--</div>
+                                <div class="k-p-db-subtitle">802.11 AdHoc Devices</div>
+                            </div>
+                        </div>
+                        <div class="row no-gutters gridchannel">
+                            <div id="channels"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Accordion card -->
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header bluetooth" role="tab" id="BTheading">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#BTdetails" aria-expanded="false" aria-controls="collapseBT">
+                        <h5 class="Phead-0">
+                    Bluetooth:<span class="totalcount"> ( <span class="bluetoothTotal" id="Bluetotal">--</span> devices detected. ) </span>
+                </h5>
+                    </a>
+                </div>
+                <!-- Card body -->
+                <div id="BTdetails" class="panel-collapse_t collapse " role="tabpanel" aria-labelledby="BTdetails">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="k-p-db-bignum" id="BTLE">--</div>
+                                    <div class="k-p-db-subtitle">BTLE Devices</div>
+                                </div>
+                                <div class="col">
+                                    <div class="k-p-db-bignum" id="BREDR">--</div>
+                                    <div class="k-p-db-subtitle">BR/EDR Devices</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header Other" role="tab" id="Otherheading">
+                    <h5 class="Phead-0">
+ <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOther" role="button" aria-expanded="false" aria-controls="collapseOther">Others: <span class="totalcount"> ( <span class="otherTotal" id="Othertotal">--</span> devices detected. ) </a></span> </h5>
+                </div>
+                <div class="panel-collapse_t collapse " id="collapseOther">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="Z-Wave">--</div>
+                                <div class="k-p-db-subtitle">Z-wave Devices</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="RTL433">--</div>
+                                <div class="k-p-db-subtitle">RTL433</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="UAV">--</div>
+                                <div class="k-p-db-subtitle">UAV</div>
+                            </div>
+                            <div class="col">
+                                <div class="k-p-db-bignum" id="Unknown">--</div>
+                                <div class="k-p-db-subtitle">Unknown*</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col" style="text-align:right;font-size:10px;">
+                                (*unkown= Empty kismet.device.base.type)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    </div>
+    </div>
+    <div class="card fullscreen APCard" id="AP802">
+        <div class="card-header APHeader" role="tab" id="AP802Header">
+            <h5 class="Phead-0" style="margin-bottom:0px;">
+ <a class="collapsed" data-toggle="collapse" href="#collapseAP" data-parent="#accordion" role="button" aria-expanded="false" aria-controls="collapseAP" id="click802">802.11 AP List: <span class="totalcount">( <span class="APtotal" id="APTotal">--</span> devices detected. )</a>
+ <button type="submit" class="btn" style="visibility:hidden;margin-left:10px; margin-bottom:0px; position: right;" onclick="APFullScreen()" id="fullscreenbtn"><i class="fa fa-arrows-v "></i></button> 
+</span></h5>
+        </div>
+        <div class="panel-collapse collapse collapseAP" id="collapseAP">
+            <div class="row">
+                <div class="col">
+            <table id="AP_Table" class="table AP_Table" style:"width=100%">
+                <thead class="thead-dark" style:"width=100%">
+                    <tr>
+                        <th class="AP-Name" nowrap></th>
+                        <th class="Mac-num" nowrap></th>
+                        <th char="Client-num" nowrap></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tbody></tbody>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+</div>
+        <div class="row">
+         
+           <div class="search-container">
+                <button type="submit" onclick="searchData()"><i class="fa fa-search"></i></button>
+                <input type="text" placeholder="Search.." id="search">
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    </div>
+    <!--/ wrapper-->
 </body>
 
 </html>
