@@ -18,6 +18,7 @@
 - sudo make install
 
 	`wiPi@YoMama: sudo make install`
+- restart kismet
 
 ##2.Access it via : 
 	http://localhost:2501/plugin/mobiledashboard/
