@@ -20,6 +20,21 @@
 	`wiPi@YoMama: sudo make install`
 - restart kismet
 
+	### if you have issues :
+	
+	You can install the plugin manually too.(not recommended)
+		
+		1. git clone clone https://github.com/elkentaro/KismetMobileDashboard.git
+		2. sudo mkdir /usr/local/lib/kismet/mobiledashboard
+		3. sudo mkdir /usr/local/lib/kismet/mobiledashboard
+		3. sudo mkdir /[USER FOR KISMET:root or regular user ]/.kismet/plugins/mobiledashboard
+		4. cd KismetMobileDashboard
+		5. sudo cp -r httpd /usr/local/lib/kismet/mobiledashbaord/
+		6. sudo cp manifest.conf  *[USER FOR KISMET:root or regular user]*/.kismet/plugins/mobiledashboard/
+		7. Restart kismet.
+
+	
+
 ##2.Access it via : 
 	http://localhost:2501/plugin/mobiledashboard/
 
