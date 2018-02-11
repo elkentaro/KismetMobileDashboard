@@ -26,12 +26,11 @@
 		
 		1. git clone clone https://github.com/elkentaro/KismetMobileDashboard.git
 		2. sudo mkdir /usr/local/lib/kismet/mobiledashboard
-		3. sudo mkdir /usr/local/lib/kismet/mobiledashboard
-		4. sudo mkdir /[USER FOR KISMET:root or regular user home directory ]/.kismet/plugins/mobiledashboard
-		5. cd KismetMobileDashboard
-		6. sudo cp -r httpd /usr/local/lib/kismet/mobiledashbaord/
-		7. sudo cp manifest.conf  *[USER FOR KISMET:root or regular user]*/.kismet/plugins/mobiledashboard/
-		8. Restart kismet.
+		3. sudo mkdir /[USER FOR KISMET:root or regular user home directory ]/.kismet/plugins/mobiledashboard
+		4. cd KismetMobileDashboard
+		5. sudo cp -r httpd /usr/local/lib/kismet/mobiledashbaord/
+		6. sudo cp manifest.conf  *[USER FOR KISMET:root or regular user]*/.kismet/plugins/mobiledashboard/
+		7. Restart kismet.
 
 	
 
