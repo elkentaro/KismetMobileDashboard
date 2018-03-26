@@ -48,7 +48,7 @@
 <script src="/js/jquery.kismet.battery.js"></script>
 <script src="/js/jquery.kismet.auth.js"></script>
 <script src="/js/kismet.ui.dot11.js"></script>
-<script src="js/dataTables.pageResize.min.js">
+
 <!-- Local includes from our relative js dir -->
 <script src="js/packery.pkgd.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
@@ -256,10 +256,10 @@ function status() {
 
         .done(function(data) {
             var devices = data['kismet.system.devices.count'];
-            var utime = (new Date().getTime() / 1000) - data['kismet.system.timestamp.start_sec'];
+            var utime = Math.round((data['kismet.system.timestamp.sec']-data['kismet.system.timestamp.start_sec'])/60);
 
 
-            utime = " Uptime: " + Math.round(utime / 60) + " minutes.";
+            utime = " Uptime: " + utime + " minutes.";
 
             $('#utime').html(utime)
 
