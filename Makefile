@@ -5,34 +5,41 @@ PLUGIN_NAME ?= mobiledashboard
 KIS_SRC_DIR ?= /usr/src/kismet
 KIS_INC_DIR ?= $(KIS_SRC_DIR)
 
+-include $(KIS_SRC_DIR)/Makefile.inc
+
+INSTALL ?= /usr/bin/install
+
+INSTUSR ?= root
+INSTGRP ?= root
+
 BLDHOME	= .
 top_builddir = $(BLDHOME)
 
-# Try to include the base config
--include $(KIS_SRC_DIR)/Makefile.inc
-
-# Set sane values if we don't have the base config
-INSTALL ?= /usr/bin/install
 plugindir ?= $(shell pkg-config --variable=plugindir kismet)
-INSTUSR ?= root
-INSTGRP ?= root
+ifeq ("$(plugindir)", "")
+	plugindir := "/usr/local/lib/kismet/"
+	plugindirgeneric := 1
+endif
 
 # As we have no live code, all we need is the manifest.conf to "compile"
 all:	manifest.conf
 
 # We have no requirements for install or userinstall, we just copy our data
 install:
-ifeq ("$(plugindir)", "")
-	echo "No kismet install found in pkgconfig, assuming /usr/local"
-	plugindir="/usr/local/lib/kismet/"
+ifeq ("$(plugindirgeneric)", "1")
+	@echo "No kismet install found in pkgconfig, assuming /usr/local"
 endif
+
 	mkdir -p $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)
 	$(INSTALL) -o $(INSTUSR) -g $(INSTGRP) -m 444 manifest.conf $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/manifest.conf
+
 
 	mkdir -p $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/httpd
 	cp -r httpd/* $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/httpd
 
 userinstall:
+	@echo "Installing to this users home directory (${HOME})"
+
 	mkdir -p ${HOME}/.kismet/plugins/$(PLUGIN_NAME)
 	$(INSTALL) manifest.conf $(HOME)/.kismet/plugins/$(PLUGIN_NAME)/manifest.conf
 
