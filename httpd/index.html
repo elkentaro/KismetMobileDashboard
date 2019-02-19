@@ -6,71 +6,76 @@
 <link rel="apple-touch-icon" size="76x76" href="css/images/icon.png">
 <link rel="apple-touch-icon" size="120x120" href="css/images/icon.png">
 <link rel="apple-touch-icon" size="152x152" href="css/images/icon.png">
+<script>
+    var KISMET_URI_PREFIX="../../"
+</script>
+
+
 <!-- add local bootstrap for UI -->
 <meta name="Kismet Mobile Dashboard" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script src="/js/jquery-3.1.0.min.js"></script>
-<script src="/js/jquery-ui.min.js"></script>
-<script src="/js/jquery.ui.touch-punch.min.js"></script>
-<script src="/js/jquery.ajax.binary.js"></script>
-<script src="/js/jquery.jspanel-compiled.min.js"></script>
-<script src="/js/simple-expand.min.js"></script>
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.scroller.min.js"></script>
-<script src="/js/dataTables.scrollResize.js"></script>
-<script src="/js/dataTables.pageResize.js"></script>
-<script src="/js/dataTables.colReorder.min.js"></script>
-<script src="/js/dataTables.responsive.min.js"></script>
-<script src="/js/jquery.layout-latest.js"></script>
-<script src="/js/pushmenu.js"></script>
-<script src="/js/jquery.sparkline.min.js"></script>
-<script src="/js/raphael.min.js"></script>
-<script src="/js/morris.min.js"></script>
-<script src="/js/Chart.bundle.min.js"></script>
-<script src="/js/js.storage.min.js"></script>
-<script src="/js/tooltipster.bundle.min.js"></script>
-<script src="/js/kismet.utils.js"></script>
+<script src="../../js/jquery-3.1.0.min.js"></script>
+<script src="../../js/jquery-ui.min.js"></script>
+<script src="../../js/jquery.ui.touch-punch.min.js"></script>
+<script src="../../js/jquery.ajax.binary.js"></script>
+<script src="../../js/jquery.jspanel-compiled.min.js"></script>
+<script src="../../js/simple-expand.min.js"></script>
+<script src="../../js/jquery.dataTables.min.js"></script>
+<script src="../../js/dataTables.scroller.min.js"></script>
+<script src="../../js/dataTables.scrollResize.js"></script>
+<script src="../../js/dataTables.pageResize.js"></script>
+<script src="../../js/dataTables.colReorder.min.js"></script>
+<script src="../../js/dataTables.responsive.min.js"></script>
+<script src="../../js/jquery.layout-latest.js"></script>
+<script src="../../js/pushmenu.js"></script>
+<script src="../../js/jquery.sparkline.min.js"></script>
+<script src="../../js/raphael.min.js"></script>
+<script src="../../js/morris.min.js"></script>
+<script src="../../js/Chart.bundle.min.js"></script>
+<script src="../../js/js.storage.min.js"></script>
+<script src="../../js/tooltipster.bundle.min.js"></script>
+<script src="../../js/kismet.utils.js"></script>
 <!-- Core UI elements that get loaded first, we need these for some of the kismet
     UI base code unfortunately even if we don't implement them -->
-<script src="/js/kismet.ui.sidebar.js"></script>
-<script src="/js/kismet.ui.tabpane.js"></script>
-<script src="/js/kismet.ui.settings.js"></script>
-<script src="/js/kismet.ui.datasources.js"></script>
-<script src="/js/kismet.ui.js"></script>
-<script src="/js/kismet.ui.base.js"></script>
-<script src="/js/kismet.ui.gadgets.js"></script>
-<script src="/js/jquery.kismet.devicedata.js"></script>
-<script src="/js/jquery.kismet.messagebus.js"></script>
-<script src="/js/jquery.kismet.channeldisplay.js"></script>
-<script src="/js/kismet.ui.iconbar.js"></script>
-<script src="/js/jquery.kismet.alert.js"></script>
-<script src="/js/jquery.kismet.battery.js"></script>
-<script src="/js/jquery.kismet.auth.js"></script>
-<script src="/js/kismet.ui.dot11.js"></script>
+<script src="../../js/kismet.ui.sidebar.js"></script>
+<script src="../../js/kismet.ui.tabpane.js"></script>
+<script src="../../js/kismet.ui.settings.js"></script>
+<script src="../../js/kismet.ui.datasources.js"></script>
+<script src="../../js/kismet.ui.js"></script>
+<script src="../../js/kismet.ui.base.js"></script>
+<script src="../../js/kismet.ui.gadgets.js"></script>
+<script src="../../js/jquery.kismet.devicedata.js"></script>
+<script src="../../js/jquery.kismet.messagebus.js"></script>
+<script src="../../js/jquery.kismet.channeldisplay.js"></script>
+<script src="../../js/kismet.ui.iconbar.js"></script>
+<script src="../../js/jquery.kismet.alert.js"></script>
+<script src="../../js/jquery.kismet.battery.js"></script>
+<script src="../../js/jquery.kismet.auth.js"></script>
+<script src="../../js/kismet.ui.dot11.js"></script>
 
 <!-- Local includes from our relative js dir -->
 <script src="js/packery.pkgd.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.jspanel.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/responsive.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/colReorder.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/morris.css" />
-<link rel="stylesheet" type="text/css" href="/css/pushmenu.css" />
-<link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.messagebus.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.channeldisplay.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.alert.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.battery.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.auth.css" />
-<link rel="stylesheet" type="text/css" href="/css/jquery.kismet.channeldisplay.css" />
-<link rel="stylesheet" type="text/css" href="/css/reset.css" />
-<link rel="stylesheet" type="text/css" href="/css/text.css" />
-<link rel="stylesheet" type="text/css" href="/css/layout.css" />
-<link rel="stylesheet" type="text/css" href="/css/kismet.css" />
+<link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/tooltipster.bundle.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.jspanel.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/responsive.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/colReorder.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/morris.css" />
+<link rel="stylesheet" type="text/css" href="../../css/pushmenu.css" />
+<link rel="stylesheet" type="text/css" href="../../css/tooltipster.bundle.min.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.messagebus.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.channeldisplay.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.alert.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.battery.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.auth.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.channeldisplay.css" />
+<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+<link rel="stylesheet" type="text/css" href="../../css/text.css" />
+<link rel="stylesheet" type="text/css" href="../../css/layout.css" />
+<link rel="stylesheet" type="text/css" href="../../css/kismet.css" />
 <script src="js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 <!-- Local includes from our relative css link -->
@@ -97,7 +102,7 @@ function getDeviceC() {
 
 
     jQuery.ajax({
-            url: "/devices/summary/devices.json",
+            url: "../../devices/summary/devices.json",
             type: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
@@ -125,7 +130,7 @@ function getDeviceC() {
             var WAP_NC = data.filter(function(data) {
                 if (data['kismet.device.base.type'] == "Wi-Fi AP") {
                     var AP_id = data['kismet.device.base.macaddr'];
-                    var AP_Name = data['kismet.device.base.name'];
+                    var AP_Name = kismet.sanitizeObject(data['kismet.device.base.name']);
                     var APKey = data['kismet.device.base.key'];
                     var AP_Cnum = data['dot11.device.num_associated_clients'];
                     var AP_man = data['kismet.device.base.manuf'];
@@ -212,7 +217,8 @@ function getDeviceC() {
 
 
 function datasources() {
-    $.get("/datasource/all_sources.json")
+    $.get("../../datasource/all_sources.json")
+
         .done(function(data) {
 
             var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
@@ -252,7 +258,8 @@ function datasources() {
 
 
 function status() {
-    $.get("/system/status.json")
+    $.get("../../system/status.json")
+
 
         .done(function(data) {
             var devices = data['kismet.system.devices.count'];
