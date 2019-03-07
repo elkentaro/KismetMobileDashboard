@@ -163,9 +163,9 @@ function getDeviceC() {
 
 
             var BluetoothC = data.filter(function(data) { return data['kismet.device.base.type'] == "Bluetooth" }).length;
-            var MousejackC = data.filter(function(data) { return data['kismet.device.base.type'] == "NrfMousejack" }).length;
+            var MousejackC = data.filter(function(data) { return data['kismet.device.base.type'] == "KB/Mouse" }).length;
 
-            var RT433C = data.filter(function(data) { return data['kismet.device.base.type'] == "RTL433" }).length;
+            var RT433C = data.filter(function(data) { return data['kismet.device.base.type'] == "Sensor" }).length;
             var ZwaveC = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-Wave" }).length;
             var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
             var UnknownC = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
