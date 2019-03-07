@@ -167,7 +167,7 @@ function getDeviceC() {
 
             var RT433C = data.filter(function(data) { return data['kismet.device.base.type'] == "Sensor" }).length;
             var ZwaveC = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-Wave" }).length;
-            var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
+            var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV Device" }).length;
             var UnknownC = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
 
             var Wtotal = WclientC + WBridgeC + WAPC + WadHocC;
