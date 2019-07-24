@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/onsenui.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/jquery-3.4.1.js"></script>
+  
+<!-- onsenui menu function -->
+  <script>
+window.fn = {};
+window.fn.open = function() {
+  var menu = document.getElementById('menu');
+  menu.open();
+
+
+
+};
+
+window.fn.load = function(page) {
+  var content = document.getElementById('content');
+  var menu = document.getElementById('menu');
+  content.load(page)
+    .then(menu.close.bind(menu));
+};
+</script>
+<!-- / onsenui menu function -->
+
+
+
+
+
+
+
+<!-- css for dashboard -->
+<link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+
+<!---Main functions-->
+
+<script>
+var bAuth="";
+
+var last_packets = 0;
+var last_devs = 0;
+var phys = ["IEEE802.11", "RTL433", "Z-Wave", "Bluetooth", "UAV","NrfMousejack"];
+var prevcount802 = 0;
+
+var WAP_Name = [];
+var CleanName = [];
+var WAPC = 0;
+var APList = [];
+var i = 0;
+var AP_tableList = [];
+var AP_Details = [];
+var allSourceC ="";
+
+
+
+function login(){
+
+  const username = document.querySelector('#username').value;
+  const password = document.querySelector('#password').value;
+
+  bAuth = btoa(username+":"+password);
+  console.log("bauth is",bAuth);
+
+jQuery.ajax({
+    url: "../../session/set_password",
+    type: "POST",
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+    },
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+        "password": password,
+        "username": username,
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+    /* ... */
+});
+
+
+
+
+
+}
+
+
+function checkLogin(){
+	console.log("checking login");
+
+jQuery.ajax({
+    url: "../../session/check_session",
+    type: "GET",
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+     
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+
+    status();
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+
+  
+
+
+})
+.always(function() {
+    /* ... */
+});
+
+
+
+
+
+
+}
+
+function status(){
+
+
+	
+bAuthStr="Basic "+bAuth;
+  console.log("using bauth:",bAuthStr);
+jQuery.ajax({
+    url: "../../system/status.json",
+    type: "GET",
+    headers: {
+  
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+    	 var devices = data['kismet.system.devices.count'];
+
+		var utime = Math.round((data['kismet.system.timestamp.sec']-data['kismet.system.timestamp.start_sec'])/60);
+			var devC = (data['kismet.system.devices.count']);
+
+            var now = (data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'] - 1) % 60;
+            var packets = data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec'][now];
+
+
+             if (packets < last_packets) {
+                $('#packetsup').hide();
+                $('#packetsdown').show();
+            } else if (packets == last_packets) {
+ 				$('#packetsdown').hide();
+                $('#packetsup').hide();
+
+            }
+             else {
+                $('#packetsdown').hide();
+                $('#packetsup').show();
+            }
+
+
+		utime = " Uptime: " + utime + " minutes.";
+		console.log(utime);
+		$('#utime_d').html(utime);
+    
+
+	
+		$('#numdevs').html(devC);
+		
+
+		   if (devices < last_devs) {
+                $('#devsup').hide();
+                $('#devsdown').show();
+            } else if (devices == last_devs) {
+                $('#devsup').hide();
+                $('#devsdown').hide();
+            } else {
+                $('#devsdown').hide();
+                $('#devsup').show();
+            }
+
+            last_devs = devices;
+
+
+            $('#numpackets').html(packets);
+
+
+
+            	console.log("packets is",packets);
+            	console.log("last_packets is",last_packets);
+
+
+            last_packets = packets;
+
+
+
+
+
+		getDatasources();
+		getDevices();
+
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+ setTimeout(status, 5000);
+});
+
+
+}
+
+
+
+function getDatasources(){
+
+
+ $.get("../../datasource/all_sources.json")
+
+        .done(function(data) {
+
+            var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
+          
+            if (allSourceC ==""){
+        	  allSourceC = SourceC;
+            }
+
+
+            console.log("source count is ",SourceC);
+
+            $('#numsources').html(SourceC);
+
+            var SourceConfigC = (data.length);
+
+            if (SourceC < allSourceC) {
+
+                $('#numsources').addClass('error');
+                $('#activeSources').addClass('error');
+                $('#SourceErrors').html("Source Error Detected");
+            } else {
+                $('#numsources').removeClass('error');
+                $('#activeSources').removeClass('error');
+                $('#SourceErrors').html("");
+
+            }
+
+
+            var chans = {};
+            for (var i = 0; i < data.length; i++) {
+                var ds = data[i];
+
+                for (var c in ds['kismet.datasource.channels']) {
+                    chans[ds['kismet.datasource.channels'][c]] = 1;
+                }
+            }
+
+            $('#numchans').html(Object.keys(chans).length);
+        })
+        .always(function() {
+            setTimeout(getDatasources, 5000);
+        });
+}
+
+
+function getDevices(){
+
+
+jQuery.ajax({
+    url: "../../devices/views/all_views.json",
+    type: "GET",
+    headers: {
+           "Content-Type": "application/json; charset=utf-8",
+
+
+
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+    /* ... */
+});
+
+
+
+
+
+}
+
+
+
+
+</script>
+
+<script type="text/javascript">
+$(function() {
+
+
+
+    // Set a global timeout
+    $.ajaxSetup({
+        timeout: 5000,
+        xhrFields: {
+            withCredentials: false
+        }
+    });
+
+        checkLogin();
+        status();
+});
+</script>
+
+</head>
+
+
+
+
+<body>
+<ons-splitter>
+  <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+    <ons-page >
+      <ons-list>
+        <ons-list-item onclick="fn.load('index.html')" tappable>
+         <ons-icon icon="fa-home" style="padding: 10px"></ons-icon>
+         Home
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('settings.html')" tappable>
+        	<ons-icon icon="fa-cog" style="padding: 10px"></ons-icon>
+        	Settings
+        </ons-list-item>
+           <ons-list-item onclick="fn.load('datasources.html')" tappable>
+         <ons-icon icon="fa-puzzle-piece" style="padding: 10px"></ons-icon>Datasources
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('login.html')" tappable>
+          <ons-icon icon="fa-key" style="padding: 10px"></ons-icon>Login
+        </ons-list-item>
+      </ons-list>
+    </ons-page>
+  </ons-splitter-side>
+  <ons-splitter-content id="content" page="index.html"></ons-splitter-content>
+</ons-splitter>
+
+<template id="index.html">
+  <ons-page id="main">
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        <ons-icon icon="fa-home" style="padding-right:10px"></ons-icon>Home
+      </div>
+    </ons-toolbar>
+
+    <div class="card">
+    <ons-row class="cheader"><ons-col>System Details:<span style="color:black"> <span id="utime_d">xxxxxxx</span></span></ons-col>
+    	</ons-row>
+    	<ons-row height="140px"><ons-col></ons-col></ons-row>
+    <ons-row>
+    	<ons-col class="bignum"><span id="numsources"></span><br><span class="subtitle">Active Sources</span></ons-col>
+    	<ons-col class="bignum"><span id="numchans"></span><br><span class="subtitle">Channels</span></ons-col>
+    	<ons-col class="bignum"><span id="numpackets" style="padding-right:3px;"></span>
+    		<ons-icon icon="fa-chevron-up" class="data-up" id="packetsup"></ons-icon>
+    		<ons-icon icon="fa-chevron-down" class="data-down" id="packetsdown"></ons-icon>
+    		<br><span class="subtitle">Packets/sec</span></ons-col>
+
+    	<ons-col class="bignum"><span id="numdevs"></span><i class="dataup" id="devup"></i><i class="datadown" id="devdown"></i><br><span class="subtitle">Total # of Devices</span></ons-col>
+    </ons-row>
+</div>
+
+<div class="card">
+ 
+    	<ons-row>
+    	<ons-col class="cheader"> <ons-icon icon="fa-wifi" style="padding-right:10px;color:black" size="18px"></ons-icon> 802.11 details</ons-col>
+
+</ons-row>
+
+    <ons-row>
+    	<ons-col class="bignum"><span id="num802Aps">APs</span><br><span class="subtitle">APs</span></ons-col>
+    	<ons-col class="bignum"><span id="num802Clients">Clients</span><br><span class="subtitle">802.11 Clients</span></ons-col>
+    	<ons-col class="bignum"><span id="num802Bridges">Bridge</span><br><span class="subtitle">Bridged Devices</span></ons-col>
+    	<ons-col class="bignum"><span id="num802Adhoc">AdHoc</span><br><span class="subtitle">802.11 AdHoc Devices</span></ons-col>
+    </ons-row>
+
+</div>
+
+<div class="card">
+</ons-row>
+    <ons-row height="150"><ons-col> CHannel breakdown</ons-col>
+    </ons-row>
+
+</div>
+
+<div class="card">
+    	<ons-row>
+    	<ons-col class="cheader"> <ons-icon icon="fa-bluetooth-b" style="padding-right:10px;color:black" size="18px"></ons-icon> Bluetooth</ons-col>
+    </ons-row>
+
+
+   <ons-row>
+    	<ons-col class="bignum"><span id="numBTLE">BTLE</span><br><span class="subtitle">BTLE Devices</span></ons-col>
+    	<ons-col class="bignum"><span id="numBR">BR/EDR</span><br><span class="subtitle">BR/EDR Devices</span></ons-col>  	
+    </ons-row>
+</div>
+<div class="card">
+    <ons-row>
+    	<ons-row>
+    	<ons-col class="cheader"> <ons-icon icon="fa-globe" style="padding-right:10px;color:black" size="18px"></ons-icon> Other</ons-col>
+    </ons-row>
+
+
+    <ons-row>
+    	<ons-col class="bignum"><span id="numRTL433">RTL433</span><br><span class="subtitle">RTL433</span></ons-col>
+    	<ons-col class="bignum"><span id="numZWave">Z-Wave</span><br><span class="subtitle">Z-Wave</span></ons-col>
+    	<ons-col class="bignum"><span id="numMousejack">Mousejack</span><br><span class="subtitle">Mousejack</span></ons-col>
+    	<ons-col class="bignum"><span id="UAV">UAV</span><br><span class="subtitle">UAV</span></ons-col>
+    	<ons-col class="bignum"><span id="numUnkown">Unknown</span><br><span class="subtitle">Unknown*</span></ons-col>
+    </ons-row>
+    <ons-row><ons-col align="right"><span class="subtitle">(*unkown=Emplyt kismet.device.basetype)</span></ons-col></ons-row>
+
+
+
+
+</div>
+
+
+
+
+
+<ons-bottom-toolbar>
+	
+	<h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard</h2>
+
+</ons-bottom-toolbar>
+
+  </ons-page>
+
+
+
+
+
+
+
+
+
+</template>
+
+<template id="settings.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        <ons-icon icon="fa-cog" style="padding-right:10px"></ons-icon>Settings
+      </div>
+    </ons-toolbar>
+    <ons-bottom-toolbar>
+	<div class="center">KISMET Mobile Dashboard</div>
+</ons-bottom-toolbar>
+  </ons-page>
+</template>
+
+<template id="datasources.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+       <ons-icon icon="fa-puzzle-piece" style="padding-right:10px"></ons-icon> Datasources
+      </div>
+    </ons-toolbar>
+    <ons-bottom-toolbar>
+    	<div class="card">
+	<h2 class="card__title">KISMET Mobile Dashboard</h2>
+</div>
+</ons-bottom-toolbar>
+ 
+  </ons-page>
+
+</template>
+
+
+<template id="login.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+       <ons-icon icon="fa-key" style="padding-right:10px"></ons-icon>  Login
+      </div>
+    </ons-toolbar>
+
+<div class="card">
+
+	Kismet requires a username and password for functionality which changes the server, such as adding interfaces or changing configuration, or accessing some types of data.The Kismet password is stored in ~/.kismet/kismet_httpd.conf in the home directory of the user running Kismet. You will need this password to configure data sources, download pcap and other logs, or change server-side settings. If this server is running as root, so the password can be found in ~root/.kismet/kismet_httpd.conf
+
+</div>
+
+   <div style="text-align: center; margin-top: 200px">
+  <p>
+    <ons-input id="username" placeholder="Username" modifier="underbar" value="kismet"></ons-input>
+  </p>
+
+  <p>
+    <ons-input
+      id="password"
+      placeholder="Password"
+      type="password"
+      modifier="underbar"
+      value="gC51Buo4lS0fFLcy"
+    >
+    </ons-input>
+  </p>
+
+  <p>
+    <ons-button onClick="login()">Log in</ons-button>
+  </p>
+  </div>
+
+
+<ons-bottom-toolbar>
+	<div class="center">KISMET Mobile Dashboard</div>
+</ons-bottom-toolbar>
+  </ons-page>
+</template>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<html>
+
+<title>Kismet</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- With the new relative reverse proxy homing options, we should use
+     relative paths for the includes; we get homed in /plugins/pluginname/
+     so we're back two.
+
+     We also need to set the prefix for the rest of the UI code -->
+<script>
+    var KISMET_URI_PREFIX="../../../../"
+</script>
+
+<script src="../../../js/jquery-3.1.0.min.js"></script>
+<script src="../../../js/jquery-ui.min.js"></script>
+<script src="../../../js/jquery.ui.touch-punch.min.js"></script>
+<script src="../../../js/jquery.ajax.binary.js"></script>
+<script src="../../../js/jquery.jspanel-compiled.min.js"></script>
+<script src="../../../js/simple-expand.min.js"></script>
+
+<script src="../../../js/jquery.sparkline.min.js"></script>
+
+<script src="../../../js/raphael.min.js"></script>
+<script src="../../../js/morris.min.js"></script>
+
+<script src="../../../js/Chart.bundle.min.js"></script>
+
+<script src="../../../js/js.storage.min.js"></script>
+
+<script src="../../../js/tooltipster.bundle.min.js"></script>
+
+<script src="../../../js/kismet.utils.js"></script>
+
+<!-- Core UI elements that get loaded first, we need these for some of the kismet
+    UI base code unfortunately even if we don't implement them -->
+<script src="../../../js/kismet.ui.sidebar.js"></script>
+<script src="../../../js/kismet.ui.tabpane.js"></script>
+<script src="../../../js/kismet.ui.settings.js"></script>
+
+<script src="../../../js/kismet.ui.js"></script>
+<script src="../../../js/kismet.ui.base.js"></script>
+
+<script src="../../../js/jquery.kismet.channeldisplay.js"></script>
+
+<script src="../../../js/kismet.ui.dot11.js"></script>
+
+<!-- Local includes from our relative js dir -->
+<script src="../js/packery.pkgd.min.js"></script>
+
+
+<!-- Local includes from our relative css link -->
+
+<link rel="stylesheet" type="text/css" href="../../../css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="../../../css/tooltipster.bundle.min.css" />
+
+<link rel="stylesheet" type="text/css" href="../../../css/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/jquery.jspanel.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/morris.css" />
+
+<link rel="stylesheet" type="text/css" href="../../../css/jquery.kismet.messagebus.css" />
+
+<link rel="stylesheet" type="text/css" href="../../../css/jquery.kismet.alert.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/jquery.kismet.battery.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/jquery.kismet.channeldisplay.css" />
+
+<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/text.css" /> 
+<link rel="stylesheet" type="text/css" href="../../../css/layout.css" /> 
+
+<link rel="stylesheet" type="text/css" href="../../../css/kismet.css" />
+
+<script>
+
+
+$(function() {
+  
+    $('.grid').packery({
+        itemSelector: '.grid-item',
+        percentPosition: true,
+    });
+
+    $('#channels').channels();
+});
+</script>
+
+</head>
+
+<body>
+  <div class="grid-item grid-item--widthfull channels"><div class="grid-inner" id="channels">
+  </div></div>
+</div>
+
+</body>
+</html>
+

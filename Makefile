@@ -2,15 +2,10 @@
 PLUGIN_NAME ?= mobiledashboard
 
 # Look for the kismet source in /usr/src/kismet by default
-KIS_SRC_DIR ?= /usr/src/kismet
+KIS_SRC_DIR ?= ../
 KIS_INC_DIR ?= $(KIS_SRC_DIR)
 
--include $(KIS_SRC_DIR)/Makefile.inc
-
-INSTALL ?= /usr/bin/install
-
-INSTUSR ?= root
-INSTGRP ?= root
+include $(KIS_SRC_DIR)/Makefile.inc
 
 BLDHOME	= .
 top_builddir = $(BLDHOME)
@@ -32,7 +27,6 @@ endif
 
 	mkdir -p $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)
 	$(INSTALL) -o $(INSTUSR) -g $(INSTGRP) -m 444 manifest.conf $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/manifest.conf
-
 
 	mkdir -p $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/httpd
 	cp -r httpd/* $(DESTDIR)/$(plugindir)/$(PLUGIN_NAME)/httpd

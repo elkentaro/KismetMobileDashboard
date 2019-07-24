@@ -1,557 +1,494 @@
+<!DOCTYPE html>
 <html>
 <title>Kismet Mobile Dashboard</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no" />
-<link rel="manifest" href="css/manifest/manifest.json">
-<link rel="apple-touch-icon" size="76x76" href="css/images/icon.png">
-<link rel="apple-touch-icon" size="120x120" href="css/images/icon.png">
-<link rel="apple-touch-icon" size="152x152" href="css/images/icon.png">
-<script>
-    var KISMET_URI_PREFIX="../../"
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+    <script>
+        var KISMET_URI_PREFIX="../../"
 </script>
-
-
-<!-- add local bootstrap for UI -->
-<meta name="Kismet Mobile Dashboard" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<script src="../../js/jquery-3.1.0.min.js"></script>
-<script src="../../js/jquery-ui.min.js"></script>
-<script src="../../js/jquery.ui.touch-punch.min.js"></script>
-<script src="../../js/jquery.ajax.binary.js"></script>
-<script src="../../js/jquery.jspanel-compiled.min.js"></script>
-<script src="../../js/simple-expand.min.js"></script>
-<script src="../../js/jquery.dataTables.min.js"></script>
-<script src="../../js/dataTables.scroller.min.js"></script>
-<script src="../../js/dataTables.scrollResize.js"></script>
-<script src="../../js/dataTables.pageResize.js"></script>
-<script src="../../js/dataTables.colReorder.min.js"></script>
-<script src="../../js/dataTables.responsive.min.js"></script>
-<script src="../../js/jquery.layout-latest.js"></script>
-<script src="../../js/pushmenu.js"></script>
-<script src="../../js/jquery.sparkline.min.js"></script>
-<script src="../../js/raphael.min.js"></script>
-<script src="../../js/morris.min.js"></script>
-<script src="../../js/Chart.bundle.min.js"></script>
-<script src="../../js/js.storage.min.js"></script>
-<script src="../../js/tooltipster.bundle.min.js"></script>
-<script src="../../js/kismet.utils.js"></script>
-<!-- Core UI elements that get loaded first, we need these for some of the kismet
+    <!-- Core KISMET UI elements that get loaded first -->
+    <script src="../../js/jquery-3.1.0.min.js"></script>
+    <script src="../../js/jquery-ui.min.js"></script>
+    <script src="../../js/jquery.ui.touch-punch.min.js"></script>
+    <script src="../../js/jquery.ajax.binary.js"></script>
+    <script src="../../js/jquery.jspanel-compiled.min.js"></script>
+    <script src="../../js/simple-expand.min.js"></script>
+    <script src="../../js/jquery.sparkline.min.js"></script>
+    <script src="../../js/raphael.min.js"></script>
+    <script src="../../js/morris.min.js"></script>
+    <script src="../../js/Chart.bundle.min.js"></script>
+    <script src="../../js/js.storage.min.js"></script>
+    <script src="../../js/tooltipster.bundle.min.js"></script>
+    <script src="../../js/kismet.utils.js"></script>
+    <!-- Core UI elements that get loaded first, we need these for some of the kismet
     UI base code unfortunately even if we don't implement them -->
-<script src="../../js/kismet.ui.sidebar.js"></script>
-<script src="../../js/kismet.ui.tabpane.js"></script>
-<script src="../../js/kismet.ui.settings.js"></script>
-<script src="../../js/kismet.ui.datasources.js"></script>
-<script src="../../js/kismet.ui.js"></script>
-<script src="../../js/kismet.ui.base.js"></script>
-<script src="../../js/kismet.ui.gadgets.js"></script>
-<script src="../../js/jquery.kismet.devicedata.js"></script>
-<script src="../../js/jquery.kismet.messagebus.js"></script>
-<script src="../../js/jquery.kismet.channeldisplay.js"></script>
-<script src="../../js/kismet.ui.iconbar.js"></script>
-<script src="../../js/jquery.kismet.alert.js"></script>
-<script src="../../js/jquery.kismet.battery.js"></script>
-<script src="../../js/jquery.kismet.auth.js"></script>
-<script src="../../js/kismet.ui.dot11.js"></script>
+    <script src="../../js/kismet.ui.sidebar.js"></script>
+    <script src="../../js/kismet.ui.tabpane.js"></script>
+    <script src="../../js/kismet.ui.settings.js"></script>
+    <script src="../../js/kismet.ui.js"></script>
+    <script src="../../js/kismet.ui.base.js"></script>
+    <script src="../../js/jquery.kismet.channeldisplay.js"></script>
+    <script src="../../js/kismet.ui.dot11.js"></script>
+    <!-- Local includes from our relative js dir -->
+    <script src="js/packery.pkgd.min.js"></script>
+    <!-- Local includes from our relative css link -->
+    <link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.jspanel.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/morris.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.messagebus.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.alert.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.battery.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.channeldisplay.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/text.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/kismet.css" />
+    <link rel="stylesheet" href="css/onsenui.css">
+    <link rel="stylesheet" href="css/onsen-css-components.min.css">
+    <script src="js/onsenui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+    <!-- onsenui menu function -->
+    <script>
 
-<!-- Local includes from our relative js dir -->
-<script src="js/packery.pkgd.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/tooltipster.bundle.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.jspanel.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/responsive.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/colReorder.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/morris.css" />
-<link rel="stylesheet" type="text/css" href="../../css/pushmenu.css" />
-<link rel="stylesheet" type="text/css" href="../../css/tooltipster.bundle.min.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.messagebus.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.channeldisplay.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.alert.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.battery.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.auth.css" />
-<link rel="stylesheet" type="text/css" href="../../css/jquery.kismet.channeldisplay.css" />
-<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
-<link rel="stylesheet" type="text/css" href="../../css/text.css" />
-<link rel="stylesheet" type="text/css" href="../../css/layout.css" />
-<link rel="stylesheet" type="text/css" href="../../css/kismet.css" />
-<script src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-<!-- Local includes from our relative css link -->
-<link rel="stylesheet" type="text/css" href="css/dashboard.css" />
-<script>
-var last_packets = 0;
-var last_devs = 0;
-var phys = ["IEEE802.11", "RTL433", "Z-Wave", "Bluetooth", "UAV","NrfMousejack"];
-var prevcount802 = 0;
+// If you want to preload the login password for easier operations:
 
-var WAP_Name = [];
-var CleanName = [];
-var WAPC = 0;
-var APList = [];
-var i = 0;
-var AP_tableList = [];
-var AP_Details = [];
+    var mypass="gC51Buo4lS0fFLcy";
 
 
+    window.fn = {};
+
+    window.fn.open = function() {
+        var menu = document.getElementById('menu');
+        menu.open();
+
+    };
+
+    window.fn.load = function(page) {
+        //	   console.log("page is", page);
+
+        var menu = document.getElementById('menu');
+        var navi = document.getElementById('navi');
+
+        menu.close();
+        navi.resetToPage(page, { animation: 'none' });
+    };
+
+    var bAuth = "";
 
 
-function getDeviceC() {
-
-
-
-    jQuery.ajax({
-            url: "../../devices/summary/devices.json",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-            },
-            contentType: "application/x-www-form-urlencoded",
-            data: {
-                "json": "{\"fields\":[\"kismet.device.base.type\",\"kismet.device.base.key\",\"kismet.device.base.macaddr\",\"kismet.device.base.channel\",\"kismet.device.base.manuf\",\"kismet.device.base.name\",\"dot11.device/dot11.device.num_associated_clients\",\"dot11.device/dot11.device.associated_client_map\"]}",
-            },
-        })
+ 
 
 
 
 
 
-        .done(function(data, textStatus, jqXHR) {
+
+    var login = function login() {
+
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+
+        bAuth = btoa(username + ":" + password);
+        bAuthC = "Basic " + bAuth
 
 
 
-            var WclientC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
-            var WBridgeC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged" }).length;
+        jQuery.ajax({
+                url: "../../session/check_login",
+                type: "GET",
+                headers: {
+                    "Authorization": bAuthC,
 
-            var WAPC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+                },
 
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
 
-            var WAP_NC = data.filter(function(data) {
-                if (data['kismet.device.base.type'] == "Wi-Fi AP") {
-                    var AP_id = data['kismet.device.base.macaddr'];
-                    var AP_Name = kismet.sanitizeObject(data['kismet.device.base.name']);
-                    var APKey = data['kismet.device.base.key'];
-                    var AP_Cnum = data['dot11.device.num_associated_clients'];
-                    var AP_man = data['kismet.device.base.manuf'];
-                    var AP_cMap = data['dot11.device.associated_client_map'];
-                    var AP_Chan = data['kismet.device.base.channel']
-                  
+                fn.load('home.html');
 
-                    if (APList.indexOf(APKey) === -1) {
-                        APList.push(APKey);
-
-
-                        if (AP_Name.length > 30) {
-                            AP_Name = '<p class="wordwrap">' + AP_Name + '</p>';
-
-                        }
-
-                        AP_tableList.push([AP_Name, AP_id, AP_Cnum, AP_man, AP_Chan, AP_cMap]);
-
-                    }
-
-                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+               // console.log("HTTP Request Failed");
+                ons.notification.alert('login failed!');
+            })
+            .always(function() {
+                /* ... */
             });
 
 
 
-            var WadHocC = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-hoc / WDS " }).length;
-
-            var BTLEC = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
-            var BREDRC = data.filter(function(data) { return data['kismet.device.base.type'] == "BR/EDR" }).length;
 
 
-            var BluetoothC = data.filter(function(data) { return data['kismet.device.base.type'] == "Bluetooth" }).length;
-            var MousejackC = data.filter(function(data) { return data['kismet.device.base.type'] == "KB/Mouse" }).length;
-
-            var RT433C = data.filter(function(data) { return data['kismet.device.base.type'] == "Sensor" }).length;
-            var ZwaveC = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-Wave" }).length;
-            var UAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV Device" }).length;
-            var UnknownC = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
-
-            var Wtotal = WclientC + WBridgeC + WAPC + WadHocC;
-            var Bluetotal = BTLEC + BREDRC;
-            var otherTotal = RT433C + ZwaveC + UAVC + +MousejackC + UnknownC;
-            var APTotal = APList.length;
+    }
 
 
-            $('#IEEE802Client').html(WclientC);
+    function checkLogin() {
+     //   console.log("checking login");
+        var content = document.querySelector('ons-splitter-content');
 
-            $('#IEEE802Bridge').html(WBridgeC);
+        jQuery.ajax({
+                url: "../../session/check_session",
+                type: "GET",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
 
-            $('#IEEE802AP').html(WAPC);
-            $('#IEEE802adHoc').html(WadHocC);
-
-
-
-            $('#Bluetooth').html(BluetoothC);
-            $('#BTLE').html(BTLEC);
-            $('#BREDR').html(BREDRC);
-
-
-            $('#RTL433').html(RT433C);
-            $('#Mousejack').html(MousejackC);
-            $('#UAV').html(UAVC);
-            $('#Zwave').html(ZwaveC);
-
-            $('#Unknown').html(UnknownC);
-
-            $('#Wtotal').html(Wtotal);
-            $('#Bluetotal').html(Bluetotal);
-            $('#Othertotal').html(otherTotal);
-            $('#APTotal').html(APTotal);
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+                fn.load('home.html');
+                status();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+       //
 
 
 
 
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log("HTTP Request Failed");
-        })
-        .always(function() {
-            setTimeout(getDeviceC, 5000);
-
-        })
-
-}
 
 
 
-function datasources() {
-    $.get("../../datasource/all_sources.json")
-
-        .done(function(data) {
-
-            var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
-
-            $('#numsources').html(SourceC);
-
-            var SourceConfigC = (data.length);
-
-            if (SourceC < SourceConfigC) {
-
-                $('#numsources').addClass('error');
-                $('#activeSources').addClass('error');
-                $('#SourceErrors').html("Source Error Detected");
-            } else {
-                $('#numsources').removeClass('error');
-                $('#activeSources').removeClass('error');
-                $('#SourceErrors').html("");
-
-            }
+       //         console.log("HTTP Request Failed");
+                fn.load('login.html');
 
 
-            var chans = {};
-            for (var i = 0; i < data.length; i++) {
-                var ds = data[i];
 
-                for (var c in ds['kismet.datasource.channels']) {
-                    chans[ds['kismet.datasource.channels'][c]] = 1;
-                }
-            }
-
-            $('#numchans').html(Object.keys(chans).length);
-        })
-        .always(function() {
-            setTimeout(datasources, 5000);
-        });
-}
-
-
-function status() {
-    $.get("../../system/status.json")
-
-
-        .done(function(data) {
-            var devices = data['kismet.system.devices.count'];
-            var utime = Math.round((data['kismet.system.timestamp.sec']-data['kismet.system.timestamp.start_sec'])/60);
-
-
-            utime = " Uptime: " + utime + " minutes.";
-
-            $('#utime').html(utime)
-
-            $('#numdevs').html(devices);
-
-            if (devices < last_devs) {
-                $('#devsup').hide();
-                $('#devssdown').show();
-            } else if (devices == last_devs) {
-                $('#devsup').hide();
-                $('#devsdown').hide();
-            } else {
-                $('#devsdown').hide();
-                $('#devsup').show();
-            }
-
-            last_devs = devices;
-
-            var now = (data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'] - 1) % 60;
-            var packets = data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec'][now];
-
-            $('#numpackets').html(packets);
-
-            if (packets < last_packets) {
-                $('#packetsup').hide();
-                $('#packetsdown').show();
-            } else {
-                $('#packetsdown').hide();
-                $('#packetsup').show();
-            }
-
-            last_packets = packets;
-
-            var simple_rrd =
-                kismet.RecalcRrdData(
-                    data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'],
-                    data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'],
-                    kismet.RRD_SECOND,
-                    data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec']);
-
-            var w = $('#pps').width();
-            var h = $('#pps').height();
-            var bw = w / 63;
-
-            w = Math.round(w) + 'px';
-            h = Math.round(h) + 'px';
-
-            // Render the sparkline
-            $('#pps').sparkline(simple_rrd, {
-                type: "bar",
-                width: w,
-                height: h,
-                barWidth: bw,
-                barColor: '#909090',
-                nullColor: '#000000',
-                zeroColor: '#000000'
+            })
+            .always(function() {
+                /* ... */
             });
-        })
-        .always(function() {
-            setTimeout(status, 5000);
-        });
-
-}
 
 
 
-$(function() {
 
 
 
-    // Set a global timeout
-    $.ajaxSetup({
-        timeout: 5000,
-        xhrFields: {
-            withCredentials: true
-        }
-    });
-    $.fn.dataTableExt.sErrMode = "console";
+    }
+
+
+    function checkSession(){
+
+
+        jQuery.ajax({
+    url: "../../session/check_session",
+    type: "GET",
+    headers: {
+
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    status();
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+    /* ... */
+});
+
+
+
+    }
+
+
+
+    function status() {
     $("#packetsup").hide();
     $("#packetsdown").hide();
-    $("#devsup").hide();
-    $("#devsdown").hide();
-    $('#pm_menu').pushmenu({ button: "#pm_open" });
+
+
+        var devices = "";
+        var last_packets = 0;
+        var last_devs = 0;
+
+        bAuthStr = "Basic " + bAuth;
+
+        jQuery.ajax({
+                url: "../../system/status.json",
+                type: "GET",
+                headers: {
+
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                devices = data['kismet.system.devices.count'];
+
+                var utime = Math.round((data['kismet.system.timestamp.sec'] - data['kismet.system.timestamp.start_sec']) / 60);
+
+
+                var now = (data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'] - 1) % 60;
+                var packets = data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec'][now];
 
 
 
 
-    kismet.GetDynamicIncludes().done(function() {
-        datasources();
+                utime = " Uptime: " + utime + " minutes.";
 
-        status();
-
-        $('#channels').channels();
-
-        getDeviceC();
+                $('#utime_d').html(utime);
 
 
-        kismet_ui.HealthCheck();
+                $('#numdevs').html(devices);
 
+                $('#numpackets').html(packets);
 
+        
 
-
-    });
+                getDatasources();
+                getDevices();
 
 
 
-});
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+         //       console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                setTimeout(status, 5000);
+            });
 
 
-
-
-
-
-
-
-
-$(function() {
-    $(".collapseAP").on('shown.bs.collapse', function(e) {
-
-       
-
-        $('#AP_Table').DataTable().destroy();
-
-        $('#AP_Table').DataTable({
-            scrollY:'200px',
-            "ordering": true,
-            "paging": false,
- 
-            data: AP_tableList,
-            "bInfo": false,
-            "dom":'"collapseAP"t',
-            "columns": [
-                { "class": "AP-Name", "title": "AP Name", "orderable": true },
-                { "class": "Mac-num", "title": "BSSID", "orderable": true },
-                { "class": "Client-num", "title": "Clients", "orderable": true },
-                {"visible": false },
-                {"visible": false },
-                {"visible":false}
-
-            ]
-
-        }).columns.adjust().draw();
-        toggleFulscreenbtn();
-
-
-
-    });
-
- 
-
-});
-
-$(function() {
-    $(".collapseAP").on('hide.bs.collapse', function(e) {
-        toggleFulscreenbtn();
-    });
-
-
-});
-
-function searchData() {
-    var searchString = document.getElementById('search').value;
-    $('#AP_Table').DataTable().search(searchString).draw();
-
-}
-
-function toggleFulscreenbtn() {
-    var x = document.getElementById('fullscreenbtn');
-    if (x.style.visibility === 'hidden') {
-        x.style.visibility = 'visible';
-    } else {
-        x.style.visibility = 'hidden';
     }
-}
 
 
 
-function APFullScreen() {
+    function getDatasources() {
+        var allSourceC = "";
 
-    if ($('#AP802').hasClass('fullscreen')) {
+        $.get("../../datasource/all_sources.json")
 
-        $('#click802').addClass('noclick');
-        $('#AP802').addClass('backdown', 1000, 'easeOutBounce');
-      
-        $('#AP802').removeClass('fullscreen');
-        var newHeight = ($(window).height()-140+'px');
-    
- $('.AP_Table_wrapper').height(newHeight);
-        $('#AP_Table').DataTable().destroy();
+            .done(function(data) {
 
-      var table=$('#AP_Table').DataTable({
-            scrollY:newHeight,
-            "ordering": true,
-            "paging": false,
- 
-            data: AP_tableList,
-            "bInfo": false,
-            "dom":'"collapseAP"t',
-            "columns": [
-                { "class": "AP-Name", "title": "AP Name", "orderable": true },
-                { "class": "Mac-num", "title": "BSSID", "orderable": true },
-                { "class": "Client-num", "title": "Clients", "orderable": true },
-                {"visible": false },
-                {"visible": false },
-                {"visible":false}
+                var SourceC = data.filter(function(data) { return data['kismet.datasource.running'] == "1" }).length;
+                var sourceCTotal=data.length;
 
-            ]
+                if (allSourceC == "") {
+                    allSourceC = SourceC;
+                }
 
-        }).columns.adjust().draw();
+                var chans = {};
 
-       
-        $('.panel-collapse_t').collapse('hide');
 
-        function format(d) {
-            // `d` is the original data object for the row
-            var keyt = "";
+                for (var i = 0; i < data.length; i++) {
+                    var ds = data[i];
 
-            if (d[2] > 0) {
-                var obj = d[5];
-                var keys = Object.keys(obj);
-                for (i = 0; i < keys.length; i++) {
-                    keyt += keys[i] + "<br>";
+                    for (var c in ds['kismet.datasource.channels']) {
+                        chans[ds['kismet.datasource.channels'][c]] = 1;
+                    }
+
+                    if (data[i]['kismet.datasource.error'] == 1){
+                        $('#numsources').addClass('error');
+
+                        $('#SourceErrors').html("Source Error Detected");
+                        $('#SourceErrors').addClass('error');
+                    }
+                }
+
+                $('#numchans').html(Object.keys(chans).length);
+
+                $('#numsources').html(SourceC);
+                $('#numsources_t').html(sourceCTotal);
+
+                var SourceConfigC = (data.length);
+
+
+
+            })
+            .always(function() {
+                setTimeout(getDatasources, 5000);
+            });
+    }
+
+
+    function getDevices() {
+
+        jQuery.ajax({
+                url: "../../devices/summary/devices.json",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+                },
+                contentType: "application/x-www-form-urlencoded",
+                data: {
+                    "json": "{\"fields\":[\"kismet.device.base.type\"]}",
+                },
+            })
+
+
+
+
+
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+
+
+                var num802APs = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi AP" }).length;
+                var num802Clients = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Client" }).length;
+                var num802Devices = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Device" }).length;
+                var num802Bridges = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Bridged" }).length;
+                var num802Adhocs = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi Ad-Hoc" }).length;
+                var num802WDSs = data.filter(function(data) { return data['kismet.device.base.type'] == "Wi-Fi WDS" }).length;
+
+                var numBTLEs = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
+                var numBrs = data.filter(function(data) { return data['kismet.device.base.type'] == "BR/EDR" }).length;
+
+                var numMousejack = data.filter(function(data) { return data['kismet.device.base.type'] == "NrfMousejack" }).length;
+
+
+                var numRT433 = data.filter(function(data) { return data['kismet.device.base.type'] == "RTL433" }).length;
+                var numZwave = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-Wave" }).length;
+                var numUAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
+                var numUnknown = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
+
+
+
+                $('#num802Aps_d').html(num802APs);
+                $('#num802Clients_d').html(num802Clients);
+                $('#num802Devices_d').html(num802Devices);
+                $('#num802Bridges_d').html(num802Bridges);
+                $('#num802Adhoc_d').html(num802Adhocs);
+                $('#num802WDS_d').html(num802WDSs);
+                $('#numBTLE_d').html(numBTLEs);
+                $('#numBR_d').html(numBrs);
+                $('numMousejack_d').html(numMousejack);
+                $('numRT433_d').html(numRT433);
+                $('numUAVC_d').html(numUAVC);
+                $('numUnknown_d').html(numUnknown);
+
+
+
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+          //      console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                /* ... */
+            });
+
+    }
+
+
+    function list_datasources() {
+
+
+
+        jQuery.ajax({
+                url: "../../datasource/all_sources.json",
+                type: "GET",
+                headers: {
+
+
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                iq = data.length;
+
+                $('#datasourceslist').empty();
+                
+               
+
+                var datasources = [];
+                datasources = data;
+
+                for (di = 0; di < iq; di++) {
+                var sourceState = "";
+
+                    if (data[di]["kismet.datasource.paused"] == 1 && data[di]["kismet.datasource.running"] == 1 ){
+
+                        sourceState = "Paused";
+
+
+                    } else if (data[di]["kismet.datasource.paused"] == 0 && data[di]["kismet.datasource.running"] == 1) {
+                        sourceState = "Running";
+                    } 
+
+                    if (data[di]["kismet.datasource.error"] == 1) {
+                        sourceState = "Error";
+                    }
+
+
+                    $('#datasourceslist').append('<ons-card>' +
+                        '<ons-row><ons-col><span class="dsheader">Datasource: </span>' + data[di]["kismet.datasource.name"] + '(' + data[di]["kismet.datasource.capture_interface"] + ')</ons-col></ons-row>' +
+                        '<ons-row><ons-col><span class="dsheader">Driver Type: </span>' + data[di]["kismet.datasource.type_driver"]["kismet.datasource.driver.type"] + '</ons-col></ons-row>' + '<ons-row><ons-col><span class="dsheader">Hardware: </span>' + data[di]["kismet.datasource.hardware"] + '</ons-row>' +
+                        '<ons-row><ons-col><span class="dsheader">UUID: </span><span style="font-size:13px;">' + data[di]["kismet.datasource.uuid"] + '</span></ons-col></ons-row>' + '<ons-row><ons-col><span class="dsheader">Packets: </span>' + data[di]['kismet.datasource.num_packets'] + '</ons-col></ons-row>' + '<span style="padding-top:10px;"><ons-row vertical-align="true"><ons-col><span class="dsheader" style="margin-top:15px;padding-right:10px;padding-top:10px;">Running: </span><ons-button id="statebut" modifier="material,light" onclick="pause_restart_datasource(\'' + data[di]["kismet.datasource.uuid"] + '\'' + ',' + '\'' + sourceState + '\'' + ')">' + sourceState + ' </ons-button></ons-col></ons-row></span>' + '</ons-card>');
+
+                  
 
                 }
 
 
-            } else {
-                keys = "-";
-                keyt = "-";
-            }
-  
 
 
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            //    console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                /* ... */
 
-            return '<table class="table-sm table" style="margin-top:0px; padding-top:0px;">' +
-                '<tr class="details">' +
-                '<td>Manufacturer:</td>' +
-                '<td style="background-color:white;">' + d[3] + '</td>' +
-                '<td>Channel</td>' +
-                '<td class="details">' + d[4] + '</td>' +
-                '</tr>' +
-                '<tr class="details">' +
-                '<td>Associated Clients</td>' +
-                '<td class="details" colspan="3">' + keyt + '</td>' +
-                '</tr>' +
-
-                '</table>';
-        }
+                setTimeout(list_datasources, 20000);
+            });
 
 
 
 
-       
-        $('#AP_Table tbody').on('click', 'tr', function() {
-            var tr = $(this);
-            var row = table.row(tr);
-            console.log("row clicked" + row.index());
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
+    }
 
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-            }
+    function list_interfaces() {
+        jQuery.ajax({
+                url: "../../datasource/list_interfaces.json",
+                type: "GET",
+                headers: {
+
+                    "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                iiq = data.length;
+
+                $('#interfaceslist').empty();
+
+                for (ii = 0; ii < iiq; ii++) {
+
+
+                    $('#interfaceslist').append('<ons-card>' + '<ons-row><ons-col><span class="dsheader">Interface: </span>' + data[ii]["kismet.datasource.probed.interface"] + '</ons-col></ons-row>' + '<ons-row><ons-col><span class="dsheader">Hardware :</span>' + data[ii]["kismet.datasource.probed.hardware"] + '</ons-col></ons-row>' + '<ons-row><ons-col><span class="dsheader"> Driver Type: </span>' + data[ii]["kismet.datasource.type_driver"]["kismet.datasource.driver.type"] + '</ons-col></ons-row>' + '<ons-row><ons-col><span class="dsheader">Description: </span>' + data[ii]["kismet.datasource.type_driver"]["kismet.datasource.driver.description"] + '</ons-col></ons-row>' +
+                        '</ons-card>');
 
 
 
-        })
+                }
 
 
 
 
-    } else {
-        $('#AP802').addClass('fullscreen', 1000, 'easeOutBounce');
-        $('#AP802').removeClass('backdown');
-        $('#click802').removeClass('noclick');
 
-        $('#collapseAP').collapse('hide');
-        $('#Systemdetails').collapse('show');
-       $('#AP_Table').DataTable().destroy();
+
+
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            //    console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                /* ... */
+            });
+
+
+        // body...
     }
 
 
@@ -559,226 +496,477 @@ function APFullScreen() {
 
 
 
-}
-</script>
+
+    function pause_restart_datasource(uuid, sourceState) {
+      //  console.log("pause restart called");
+        var cmd = "";
+
+        if (sourceState == "Running") {
+            cmd = "/pause_source.cmd";
+
+        } else {
+            cmd = "/resume_source.cmd";
+        }
+
+        jQuery.ajax({
+                url: "../../datasource/by-uuid/" + uuid + cmd,
+                type: "GET",
+                headers: {
+
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                list_datasources();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            //    console.log("HTTP Request Failed");
+                ons.notification.alert("Pause/Restart failed");
+            })
+            .always(function() {
+                /* ... */
+            });
+
+
+
+
+
+        // body...
+    }
+
+
+
+
+
+    function getDev_byType(devType) {
+
+        document.querySelector('#navi').pushPage('listdevices.html', { data: { title: devType } });
+
+        var Filtered_data = "";
+
+
+
+        jQuery.ajax({
+                url: "../../devices/summary/devices.json",
+                type: "POST",
+                headers: {
+
+                    "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+
+                },
+                contentType: "application/x-www-form-urlencoded",
+                data: {
+                    "json": "{\"fields\":[\"kismet.device.base.key\",\"kismet.device.base.macaddr\",\"kismet.device.base.type\",\"kismet.device.base.commonname\",\"kismet.device.base.crypt\",\"kismet.device.base.phyname\"]}",
+                },
+            })
+            .done(function(data_r, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+
+                
+                Filtered_data = data_r.filter(function(data_r) { return data_r['kismet.device.base.type'] == devType });
+
+                $('#listheading').html(devType);
+
+                var list = document.getElementById('devlist');
+
+                list.delegate = {
+                    createItemContent: function(i) {
+                        var iq = i + 1;
+
+                        return ons.createElement('<ons-list-item><span style="font-weight:bold;color:blue;padding-right:10px;">' + iq + ':</span> ' + '<span onclick="dev_details(\'' + Filtered_data[i]["kismet.device.base.key"] + '\')" style="cursor:pointer;">' + Filtered_data[i]['kismet.device.base.commonname'] + '</ons-list-item>');
+
+
+
+                    },
+                    countItems: function() {
+                        return Filtered_data.length;
+                    }
+                };
+
+                list.refresh();
+
+
+
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            //    console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                /* ... */
+            });
+
+
+
+
+
+        // body...
+    }
+
+    function dev_details(basekey) {
+        //   console.log("device key is", basekey);
+        // console.log("so far so good",basekey);
+
+        document.getElementById('navi').pushPage('views/device_detail.html', { data: { basedkey: basekey } });
+
+
+
+    }
+
+    function check_db(){
+
+
+               jQuery.ajax({
+    url: "../../logging/active.json",
+    type: "GET",
+    headers: {
+       
+    },
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+
+    if (data[0]["kismet.log.type_driver"]["kismet.logfile.type.class"]=="kismet"){
+
+        console.log("ready to write poi");
+        addPOI();
+    }
+
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+    /* ... */
+});
+
+
+
+
+    }
+
+    function addPOI() {
+        var dialog = document.getElementById('poidialog');
+
+
+        if (dialog) {
+            dialog.show();
+        } else {
+            ons.createElement('dialog.html', { append: true })
+                .then(function(dialog) {
+                    dialog.show();
+                });
+        }
+    };
+
+    var hideDialog = function(id) {
+        document
+            .getElementById(id)
+            .hide();
+    };
+
+
+    function writePOI() {
+       // console.log("write poi");
+        hideDialog('poidialog');
+
+
+var json = {
+    "note":"this is poi test"
+   
+};
+
+var postdata = "json=" + JSON.stringify(json);
+
+$.post("/poi/create_poi.cmd", data = postdata, dataType = "json");
+
+
+
+    }
+    </script>
+
+
+    <script type="text/javascript">
+    $(function() {
+
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: false
+            }
+        });
+
+        checkLogin();
+
+
+    });
+    </script>
 </head>
 
 <body>
-    <div class="KSM_header">
-        Kismet - Simplified Mobile Dashboard
-    </div>
-    <!--Accordion wrapper-->
-    <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="card">
-            <!-- Card header -->
-            <div class="card-header" role="tab" id="SystemDetails">
-                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#Systemdetails" aria-expanded="false" aria-controls="collapseOne">
-                    <h5 class="Phead-0">
-                    System Details:<span id="utime" class="totalcount"></span>
-                </h5>
-                </a>
-            </div>
-            <!-- Card body -->
-            <div id="Systemdetails" class="panel-collapse_t collapse show" role="tabpanel" aria-labelledby="Systemdetails">
-                <div class="card-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="numsources">--</div>
-                                <div class="k-p-db-subtitle" id="activeSources">Active Sources</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="numchans">--</div>
-                                <div class="k-p-db-subtitle">Channels</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum-arrows">
-                                    <div class="k-p-db-middle" id="numpackets">--</div>
-                                    <div class="k-p-db-middle">
-                                        <i class="fa fa-chevron-up k-p-db-up" id="packetsup"></i>
-                                        <i class="fa fa-chevron-down k-p-db-down" id="packetsdown"></i>
-                                    </div>
-                                </div>
-                                <div class="k-p-db-subtitle">Packets/Sec</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum-arrows">
-                                    <div class="k-p-db-middle" id="numdevs">--</div>
-                                    <div class="k-p-db-middle">
-                                        <i class="fa fa-chevron-up k-p-db-up" id="devsup"></i>
-                                        <i class="fa fa-chevron-down k-p-db-down" id="devsdown"></i>
-                                    </div>
-                                </div>
-                                <div class="k-p-db-subtitle">Total # of Devices</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div id="SourceErrorsTitle"></div>
-                                <div id="SourceErrors" class="error"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Accordion card -->
-        <div id="datacard">
-            <div class="card">
-                <!-- Card header -->
-                <div class="card-header wlan" role="tab" id="802heading">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#802details" aria-expanded="false" aria-controls="collapse802">
-                        <h5 class="Phead-0" id="802">
-                    802.11 Details: <span class="totalcount">( <span class="WlanTotal" id="Wtotal">--</span> devices detected. ) </span>
-                </h5>
-                    </a>
-                </div>
-                <!-- Card body -->
-                <div id="802details" class="panel-collapse_t collapse" role="tabpanel" aria-labelledby="802details">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="IEEE802AP">--</div>
-                                <div class="k-p-db-subtitle">802.11 APs</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="IEEE802Client">--</div>
-                                <div class="k-p-db-subtitle">802.11 Clients</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="IEEE802Bridge">--</div>
-                                <div class="k-p-db-subtitle">802.11 Bridged Devices</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="IEEE802adHoc">--</div>
-                                <div class="k-p-db-subtitle">802.11 AdHoc Devices</div>
-                            </div>
-                        </div>
-                        <div class="row no-gutters gridchannel">
-                            <div id="channels"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Accordion card -->
-            <div class="card">
-                <!-- Card header -->
-                <div class="card-header bluetooth" role="tab" id="BTheading">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#BTdetails" aria-expanded="false" aria-controls="collapseBT">
-                        <h5 class="Phead-0">
-                    Bluetooth:<span class="totalcount"> ( <span class="bluetoothTotal" id="Bluetotal">--</span> devices detected. ) </span>
-                </h5>
-                    </a>
-                </div>
-                <!-- Card body -->
-                <div id="BTdetails" class="panel-collapse_t collapse " role="tabpanel" aria-labelledby="BTdetails">
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="k-p-db-bignum" id="BTLE">--</div>
-                                    <div class="k-p-db-subtitle">BTLE Devices</div>
-                                </div>
-                                <div class="col">
-                                    <div class="k-p-db-bignum" id="BREDR">--</div>
-                                    <div class="k-p-db-subtitle">BR/EDR Devices</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header Other" role="tab" id="Otherheading">
-                    <h5 class="Phead-0">
- <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOther" role="button" aria-expanded="false" aria-controls="collapseOther">Others: <span class="totalcount"> ( <span class="otherTotal" id="Othertotal">--</span> devices detected. ) </a></span> </h5>
-                </div>
-                <div class="panel-collapse_t collapse " id="collapseOther">
-                    <div class="card-body">
-                        <div class="row">
-                             <div class="col">
-                                <div class="k-p-db-bignum" id="RTL433">--</div>
-                                <div class="k-p-db-subtitle">RTL433</div>
-                            </div>
+   
+    <ons-splitter>
+        <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+            <ons-page>
+                <ons-list>
+                    <ons-list-item onclick="fn.load('home.html')" tappable>
+                        <ons-icon icon="fa-home" style="padding: 10px"></ons-icon>
+                        Home
+                    </ons-list-item>
+                    <ons-list-item onclick="fn.load('datasources.html')" tappable>
+                        <ons-icon icon="fa-puzzle-piece" style="padding: 10px"></ons-icon>Datasources
+                    </ons-list-item>
+                    <ons-list-item onclick="fn.load('interfaces.html')" tappable>
+                        <ons-icon icon="fa-code-branch" style="padding: 10px"></ons-icon>Interfaces
+                    </ons-list-item>
+                    <ons-list-item onclick="fn.load('login.html')" tappable>
+                        <ons-icon icon="fa-key" style="padding: 10px"></ons-icon>Login
+                    </ons-list-item>
+                </ons-list>
+            </ons-page>
+        </ons-splitter-side>
+        <ons-splitter-content>
+        	 <ons-navigator id="navi" page="home.html"></ons-navigator>
+        </ons-splitter-content>
+    </ons-splitter>
+    <template id="home.html">
 
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="Mousejack">--</div>
-                                <div class="k-p-db-subtitle">Mousejack</div>
-                            </div>
 
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="Z-Wave">--</div>
-                                <div class="k-p-db-subtitle">Z-wave Devices</div>
-                            </div>
-</div>
+        <ons-page id="home">
+            <script type="text/javascript">
+           checkSession();
 
-   <div class="row">
-                                <div class="col">
-                                <div class="k-p-db-bignum" id="--"></div>
-                                <div class="k-p-db-subtitle"></div>
-                            </div>
-
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="UAV">--</div>
-                                <div class="k-p-db-subtitle">UAV</div>
-                            </div>
-                            <div class="col">
-                                <div class="k-p-db-bignum" id="Unknown">--</div>
-                                <div class="k-p-db-subtitle">Unknown*</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col" style="text-align:right;font-size:10px;">
-                                (*unkown= Empty kismet.device.base.type)
-                            </div>
-                        </div>
-                    </div>
+            </script>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center">
+                    <ons-icon icon="fa-home" style="padding-right:10px"></ons-icon>Home
+                </div>
+            </ons-toolbar>
+            <div class="center">
+                <div class="card">
+                    <ons-row class="cheader">
+                        <ons-col>System Details:<span style="color:black"> <span id="utime_d"></span></span></ons-col>
+                    </ons-row>
+                    <ons-row height="140px">
+                        <ons-col></ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col class="bignum"><span id="numsources">-</span>/<span id="numsources_t">-</span><br><span class="subtitle" id="SourceErrors">Active/Total Sources</span><br></ons-col>
+                        <ons-col class="bignum"><span id="numchans">-</span><br><span class="subtitle">Channels</span></ons-col>
+                        <ons-col class="bignum"><span id="numpackets" style="padding-right:3px;">-</span>
+                            <br><span class="subtitle">Packets/sec</span>
+                        </ons-col>
+                        <ons-col class="bignum"><span id="numdevs">-</span><i class="dataup" id="devup"></i><i class="datadown" id="devdown"></i><br><span class="subtitle">Total # of Devices</span></ons-col>
+                    </ons-row>
+                </div>
+                <div class="card">
+                    <ons-row>
+                        <ons-col class="cheader">
+                            <ons-icon icon="fa-wifi" style="padding-right:10px;color:black" size="18px"></ons-icon> 802.11 details
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col class="bignum"><span id="num802Aps_d" onclick="getDev_byType('Wi-Fi AP')" style="cursor: pointer;">-</span><br><span class="subtitle">APs</span></ons-col>
+                        <ons-col class="bignum"><span id="num802Clients_d" onclick="getDev_byType('Wi-Fi Client')" style="cursor: pointer;">-</span><br><span class="subtitle">Clients</span></ons-col>
+                        <ons-col class="bignum"><span id="num802Devices_d" onclick="getDev_byType('Wi-Fi Device')" style="cursor: pointer;">-</span><br><span class="subtitle">Devices</span></ons-col>
+                        <ons-col class="bignum"><span id="num802Bridges_d" onclick="getDev_byType('Wi-Fi Bridged')" style="cursor: pointer;">-</span><br><span class="subtitle">Bridged</span></ons-col>
+                        <ons-col class="bignum"><span id="num802Adhoc_d" onclick="getDev_byType('Wi-Fi Ad-Hoc')" style="cursor: pointer;">-</span><br><span class="subtitle">AdHoc </span></ons-col>
+                        <ons-col class="bignum"><span id="num802WDS_d" onclick="getDev_byType('WiFi WDS')" style="cursor: pointer;">-</span><br><span class="subtitle">WDS </span></ons-col>
+                    </ons-row>
+                </div>
+                <div class="card">
+                    <ons-row>
+                        <ons-col class="cheader">
+                            <ons-icon icon="fa-wifi" style="padding-right:10px;color:black" size="18px"></ons-icon> 802.11 Channels
+                            <ons-row>
+                                <ons-col style="padding-top:10px;">
+                                    <object data="views/channelmobiledisp.html" width="100%"></object>
+                                </ons-col>
+                            </ons-row>
+                </div>
+                <div class="card">
+                    <ons-row>
+                        <ons-col class="cheader">
+                            <ons-icon icon="fa-bluetooth-b" style="padding-right:10px;color:black" size="18px"></ons-icon> Bluetooth
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col class="bignum"><span id="numBTLE_d" onclick="getDev_byType('BTLE')" style="cursor: pointer;">-</span><br><span class="subtitle">BTLE Devices</span></ons-col>
+                        <ons-col class="bignum"><span id="numBR_d" onclick="getDev_byType('BREDR')" style="cursor: pointer;">-</span><br><span class="subtitle">BR/EDR Devices</span></ons-col>
+                    </ons-row>
+                </div>
+                <div class="card">
+                    <ons-row>
+                        <ons-col class="cheader">
+                            <ons-icon icon="fa-globe" style="padding-right:10px;color:black" size="18px"></ons-icon> Other
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col class="bignum"><span id="numRTL433_d">-</span><br><span class="subtitle" onclick="getDev_byType('RTL433')" style="cursor: pointer;">RTL433</span></ons-col>
+                        <ons-col class="bignum"><span id="numZWave_d">-</span><br><span class="subtitle" onclick="getDev_byType('ZWave')" style="cursor: pointer;">Z-Wave</span></ons-col>
+                        <ons-col class="bignum"><span id="numMousejack_d">-</span><br><span class="subtitle" onclick="getDev_byType('Mousejack')" style="cursor: pointer;">Mousejack</span></ons-col>
+                        <ons-col class="bignum"><span id="numUAV_d">-</span><br><span class="subtitle" onclick="getDev_byType('UAV')" style="cursor: pointer;">UAV</span></ons-col>
+                        <ons-col class="bignum"><span id="numUnkown_d">-</span><br><span class="subtitle">Unknown*</span></ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col align="right"><span class="subtitle">(*unkown=Emplyt kismet.device.basetype)</span></ons-col>
+                    </ons-row>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    <div class="card fullscreen APCard" id="AP802">
-        <div class="card-header APHeader" role="tab" id="AP802Header">
-            <h5 class="Phead-0" style="margin-bottom:0px;">
- <a class="collapsed" data-toggle="collapse" href="#collapseAP" data-parent="#accordion" role="button" aria-expanded="false" aria-controls="collapseAP" id="click802">802.11 AP List: <span class="totalcount">( <span class="APtotal" id="APTotal">--</span> devices detected. )</a>
- <button type="submit" class="btn" style="visibility:hidden;margin-left:10px; margin-bottom:0px; position: right;" onclick="APFullScreen()" id="fullscreenbtn"><i class="fa fa-arrows-v "></i></button> 
-</span></h5>
-        </div>
-        <div class="panel-collapse collapse collapseAP" id="collapseAP">
-            <div class="row">
-                <div class="col">
-            <table id="AP_Table" class="table AP_Table" style:"width=100%">
-                <thead class="thead-dark" style:"width=100%">
-                    <tr>
-                        <th class="AP-Name" nowrap></th>
-                        <th class="Mac-num" nowrap></th>
-                        <th char="Client-num" nowrap></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    <tbody></tbody>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-</div>
-        <div class="row">
-         
-           <div class="search-container">
-                <button type="submit" onclick="searchData()"><i class="fa fa-search"></i></button>
-                <input type="text" placeholder="Search.." id="search">
+            <ons-bottom-toolbar>
+                <h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard
+                </h2>
+            </ons-bottom-toolbar>
+        </ons-page>
+    </template>
+
+
+
+    <template id="login.html">
+        <ons-page>
+            <script>
+                document.querySelector('#password').value=mypass;
+            </script>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center">
+                    <ons-icon icon="fa-key" style="padding-right:10px"></ons-icon> Login
+                </div>
+            </ons-toolbar>
+            <div class="center">
+                <div style="text-align: center; margin-top: 200px" class="card" onclick="void(0);">
+                    <p>
+                        <ons-input id="username" placeholder="Username" modifier="underbar" value="kismet"></ons-input>
+                    </p>
+                    <p>
+                        <ons-input id="password" placeholder="Password" type="password" modifier="underbar" >
+                        </ons-input>
+                    </p>
+                    <p style="cursor:pointer;">
+                        <ons-button onClick="login();" style="cursor: pointer;">Log in</ons-button>
+                    </p>
+                    <div class="card" style="font-size: 10px;">
+                        Kismet requires a username and password for functionality which changes the server, such as adding interfaces or changing configuration, or accessing some types of data.The Kismet password is stored in ~/.kismet/kismet_httpd.conf in the home directory of the user running Kismet. You will need this password to configure data sources, download pcap and other logs, or change server-side settings. If this server is running as root, so the password can be found in ~root/.kismet/kismet_httpd.conf
+                    </div>
+                    <ons-bottom-toolbar>
+                        <h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard</h2>
+                    </ons-bottom-toolbar>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-        </div>
-    </div>
-    </div>
-    <!--/ wrapper-->
+        </ons-page>
+    </template>
+
+
+
+
+
+    <template id="datasources.html">
+        <ons-page>
+            <script type="text/javascript">
+            list_datasources();
+            </script>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center">
+                    <ons-icon icon="fa-cog" style="padding-right:10px"></ons-icon>Datasources
+                </div>
+            </ons-toolbar>
+            <div class="center">
+                <div id="datasourceslist"></div>
+                <h5 style="text-align:center;font-size:14px;"> *Datasources listings are refreshed every 20 seconds</h5>
+            </div>
+            <ons-bottom-toolbar>
+                <h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard</h2>
+            </ons-bottom-toolbar>
+            </ons-toolbar>
+        </ons-page>
+    </template>
+
+
+
+
+    <template id="interfaces.html">
+        <ons-page>
+            <script type="text/javascript">
+            list_interfaces();
+            </script>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu"></ons-icon>
+                        <div class="left"></div>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center">
+                    <ons-icon icon="fa-cog" style="padding-right:10px"></ons-icon>Interfaces
+                </div>
+            </ons-toolbar>
+            <div class="center">
+                <div id="interfaceslist"></div>
+                <h5 style="text-align:center;font-size:14px;"> *Interfaces listings </h5>
+            </div>
+            <ons-bottom-toolbar>
+                <h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard</h2>
+            </ons-bottom-toolbar>
+            </ons-toolbar>
+        </ons-page>
+    </template>
+
+
+
+
+    <template id="listdevices.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Home</ons-back-button>
+                </div>
+                <div class="center">
+                    <ons-icon icon="fa-cog" style="padding-right:10px"></ons-icon>Listing:<span id="listheading"></span>
+                </div>
+            </ons-toolbar>
+            <div class="center">
+                <ons-list>
+                    <ons-lazy-repeat id="devlist"></ons-lazy-repeat>
+                </ons-list>
+            </div>
+            <ons-bottom-toolbar>
+                <h2 class="card__title" style="text-align:center;font-weight:bold;padding-top:5px;">KISMET Mobile Dashboard</h2>
+            </ons-bottom-toolbar>
+            </ons-toolbar>
+        </ons-page>
+    </template>
+
+
+
+
+    <template id="dialog.html">
+        <ons-alert-dialog modifier="rowfooter" id="poidialog" cancelable>
+            <div class="alert-dialog-title">Add Point of Interest</div>
+            <div class="alert-dialog-content">
+                <ons-input modifier="underbar"></ons-input>
+            </div>
+            <div class="alert-dialog-footer">
+                <button class="alert-dialog-button" onclick="hideDialog('poidialog')">Cancel</button>
+                <button class="alert-dialog-button" onclick="writePOI()">OK</button>
+            </div>
+        </ons-alert-dialog>
+    </template>
 </body>
 
 </html>

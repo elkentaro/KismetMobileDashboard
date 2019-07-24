@@ -1,0 +1,203 @@
+        <ons-page>            
+        	         <script>
+                        document.addEventListener('init', function(event) {
+
+
+
+
+ var page = event.target;
+//console.log("pased basekey is",page.data.basedkey);
+    
+        basekey=page.data.basedkey;
+
+  
+        jQuery.ajax({
+                url: "../../devices/by-key/" + basekey + "/device.json",
+                type: "GET",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+
+                },
+            })
+            .done(function(data, textStatus, jqXHR) {
+                // console.log("HTTP Request Succeeded: " + jqXHR.status);
+   //             console.log(data);
+
+
+
+
+                $('#dev_detail_c2').html("");
+     //          $('#dev_name').html(data['kismet.device.base.commonname']);
+                navi.topPage.querySelector('#dev_name').innerHTML=kismet.sanitizeObject((data['kismet.device.base.commonname']));
+                navi.topPage.querySelector('#dev_mac').innerHTML=(data['kismet.device.base.macaddr']);
+                navi.topPage.querySelector('#dev_type').innerHTML=(data['kismet.device.base.type']);
+                navi.topPage.querySelector('#dev_man').innerHTML=(data['kismet.device.base.manuf']);
+                 navi.topPage.querySelector('#dev_crypto').innerHTML=(data['kismet.device.base.crypt']);
+                 navi.topPage.querySelector('#dev_chan').innerHTML=(data['kismet.device.base.channel']);
+                navi.topPage.querySelector('#dev_freq').innerHTML=(((data['kismet.device.base.frequency']/1000)/1000)+"Ghz");
+                navi.topPage.querySelector('#dev_clients').innerHTML=(data["dot11.device"]["dot11.device.num_associated_clients"]);
+                navi.topPage.querySelector('#first_seen').innerHTML=(Date(data['kismet.device.base.first_time']));
+                navi.topPage.querySelector('#last_seen').innerHTML=(Date(data['kismet.device.base.last_time']));
+               
+
+
+  
+                switch (data['kismet.device.base.type']) {
+
+                    case "Wi-Fi AP":
+                        //  console.log("Its an AP");
+                        //console.log(data);
+                         $('#dev_detail_c2').append('<ons-card id="clientmap"><ons-row style="font-size:16px;"><ons-col class="dsheader"> Associated Clients :</ons-col><ons-col id="dev_name" style="text-align:left">' + data["dot11.device"]["dot11.device.num_associated_clients"] + '</ons-col></ons-row></ons-card>');
+
+
+                        var ap_assoc_BSSID = Object.keys(data["dot11.device"]["dot11.device.associated_client_map"]);
+                        //  console.log("dot11 data object is ",data["dot11.device"]["dot11.device.associated_client_map"]);
+                        var client_map = data["dot11.device"]["dot11.device.associated_client_map"];
+                        var iKey = 0;
+
+                        for (let key of ap_assoc_BSSID) {
+
+                            iKey++;
+                            var client_mac = key;
+                            var client_kismet_key = data["dot11.device"]["dot11.device.associated_client_map"][client_mac];
+
+                    //        console.log("key is now ",client_kismet_key);
+
+                           $('#dev_detail_c3').append('<ons-card><ons-row><ons-col class="dsheader">' + iKey + '</ons-col><ons-col><span onclick="dev_details(\''+client_kismet_key+'\')" tappable>' + client_mac + '</span></ons-col><ons-row></ons-card>');
+                         
+
+                        }
+
+
+                        break;
+
+                    case "Wi-Fi Client":
+
+                        console.log("its a client");
+                        break;
+
+                    case "Wi-Fi Bridged":
+                     console.log("its a Bridged");
+
+                        break;
+
+                    case "Wi-Fi Ad-Hoc":
+                     console.log("its a Ad-Hoc");
+
+                        break;
+
+                    case "Wi-Fi WDS":
+                        break;
+
+                    case "BTLE":
+                        break;
+
+                    case "BR/EDR":
+                        break;
+
+
+                    case "NrfMousejack":
+                        break;
+
+                    case "RTL433":
+                        break;
+
+                    case "Z-Wave":
+                        break;
+
+                    case "UAV":
+                        break;
+
+
+                    case "":
+                        break;
+
+
+
+
+                }
+
+
+
+
+
+
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("HTTP Request Failed");
+            })
+            .always(function() {
+                /* ... */
+            });
+
+
+   });
+
+
+</script>
+  
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Devices List</ons-back-button>
+                </div>
+
+                <div class="center">
+                    <ons-icon icon="fa-cog" style="padding-right:10px"></ons-icon>Device Details:
+                </div>
+
+            </ons-toolbar>
+
+
+   
+
+            <div class="center">
+                <ons-card>
+ 
+                    <ons-row style="font-size:16px;" class="CommonName">
+                        <ons-col class="dsheader"> Name :</ons-col>
+                        <ons-col id="dev_name" class="datacont">-</ons-col>
+                    </ons-row>
+                    <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> MAC address :</ons-col>
+                        <ons-col id="dev_mac">-</ons-col>
+                    </ons-row>
+                    <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> Type :</ons-col>
+                        <ons-col id="dev_type">-</ons-col>
+                    </ons-row>
+                    <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> Manufacturer :</ons-col>
+                        <ons-col id="dev_man">-</ons-col>
+                    </ons-row>
+                    <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> Channel :</ons-col>
+                        <ons-col id="dev_chan">-</ons-col>
+                    </ons-row>
+     
+                    <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> Frequency Type:</ons-col>
+                        <ons-col id="dev_freq">-</ons-col>
+                    </ons-row>
+                           <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader"> Encryption :</ons-col>
+                        <ons-col id="dev_crypto">-</ons-col>
+                    </ons-row>
+                    <ons-row style="font-size:16px;">
+                    	<ons-col class="dsheader">Number of clients:</ons-col>
+                    	<ons-col id="dev_clients"></ons-col>
+                    </ons-row>
+                <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader">First Seen:</ons-col>
+                        <ons-col id="first_seen"></ons-col>
+                    </ons-row>
+                             <ons-row style="font-size:16px;">
+                        <ons-col class="dsheader">Last Seen:</ons-col>
+                        <ons-col id="last_seen"></ons-col>
+                    </ons-row>
+                </ons-card>
+                <div id="dev_detail_c2">.</div>
+                <div id="dev_detail_c3">.</div>
+            </div>
+
+        </ons-page>
