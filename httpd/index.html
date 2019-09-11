@@ -557,7 +557,7 @@
                 },
                 contentType: "application/x-www-form-urlencoded",
                 data: {
-                    "json": "{\"fields\":[\"kismet.device.base.key\",\"kismet.device.base.macaddr\",\"kismet.device.base.type\",\"kismet.device.base.commonname\",\"kismet.device.base.crypt\",\"kismet.device.base.phyname\"]}",
+                    "json": "{\"fields\":[\"kismet.device.base.key\",\"kismet.device.base.macaddr\",\"kismet.device.base.type\",\"kismet.device.base.commonname\",\"kismet.device.base.manuf\",\"kismet.device.base.crypt\",\"kismet.device.base.phyname\"]}",
                 },
             })
             .done(function(data_r, textStatus, jqXHR) {
@@ -575,7 +575,7 @@
                     createItemContent: function(i) {
                         var iq = i + 1;
 
-                        return ons.createElement('<ons-list-item><span style="font-weight:bold;color:blue;padding-right:10px;">' + iq + ':</span> ' + '<span onclick="dev_details(\'' + Filtered_data[i]["kismet.device.base.key"] + '\')" style="cursor:pointer;">' + Filtered_data[i]['kismet.device.base.commonname'] + '</ons-list-item>');
+                        return ons.createElement('<ons-list-item><span style="font-weight:bold;color:blue;padding-right:10px;">' + iq + ':</span> ' + '<span onclick="dev_details(\'' + Filtered_data[i]["kismet.device.base.key"] + '\')" style="cursor:pointer;">' + Filtered_data[i]['kismet.device.base.commonname'] + ' / '+Filtered_data[i]['kismet.device.base.manuf']+'</ons-list-item>');
 
 
 
