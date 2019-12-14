@@ -317,7 +317,7 @@
                 },
                 contentType: "application/x-www-form-urlencoded",
                 data: {
-                    "json": "{\"fields\":[\"kismet.device.base.type\"]}",
+                    "json": "{\"fields\":[\"kismet.device.base.type\",\"kismet.device.base.manuf\",\"kismet.device.base.phyname\"]}",
                 },
             })
 
@@ -340,10 +340,12 @@
                 var numBTLEs = data.filter(function(data) { return data['kismet.device.base.type'] == "BTLE" }).length;
                 var numBrs = data.filter(function(data) { return data['kismet.device.base.type'] == "BR/EDR" }).length;
 
-                var numMousejack = data.filter(function(data) { return data['kismet.device.base.type'] == "NrfMousejack" }).length;
+                var numMousejack = data.filter(function(data) { return data['kismet.device.base.phyname'] == "NrfMousejack" }).length;
 
 
-                var numRT433 = data.filter(function(data) { return data['kismet.device.base.type'] == "RTL433" }).length;
+                var numRTL433 = data.filter(function(data) { return data['kismet.device.base.manuf'] == "RTL433" }).length;
+                var numRTLADSB = data.filter(function(data) { return data['kismet.device.base.manuf'] == "RTLADSB" }).length;
+
                 var numZwave = data.filter(function(data) { return data['kismet.device.base.type'] == "Z-Wave" }).length;
                 var numUAVC = data.filter(function(data) { return data['kismet.device.base.type'] == "UAV" }).length;
                 var numUnknown = data.filter(function(data) { return data['kismet.device.base.type'] == "" }).length;
@@ -358,10 +360,12 @@
                 $('#num802WDS_d').html(num802WDSs);
                 $('#numBTLE_d').html(numBTLEs);
                 $('#numBR_d').html(numBrs);
-                $('numMousejack_d').html(numMousejack);
-                $('numRT433_d').html(numRT433);
-                $('numUAVC_d').html(numUAVC);
-                $('numUnknown_d').html(numUnknown);
+                $('#numMousejack_d').html(numMousejack);
+                $('#numRTL433_d').html(numRTL433);
+                $('#numRTLADSB_d').html(numRTLADSB);
+                $('#numUAVC_d').html(numUAVC);
+                $('#numUnknown_d').html(numUnknown);
+
 
 
 
@@ -809,9 +813,14 @@ $.post("/poi/create_poi.cmd", data = postdata, dataType = "json");
                         </ons-col>
                     </ons-row>
                     <ons-row>
-                        <ons-col class="bignum"><span id="numRTL433_d">-</span><br><span class="subtitle" onclick="getDev_byType('RTL433')" style="cursor: pointer;">RTL433</span></ons-col>
-                        <ons-col class="bignum"><span id="numZWave_d">-</span><br><span class="subtitle" onclick="getDev_byType('ZWave')" style="cursor: pointer;">Z-Wave</span></ons-col>
-                        <ons-col class="bignum"><span id="numMousejack_d">-</span><br><span class="subtitle" onclick="getDev_byType('Mousejack')" style="cursor: pointer;">Mousejack</span></ons-col>
+                        <ons-col class="bignum"><span id="numRTL433_d">-</span><br><span class="subtitle" onclick="getDev_byType('Sensor')" style="cursor: pointer;">RTL433</
+span></ons-col>
+                        <ons-col class="bignum"><span id="numRTLADSB_d">-</span><br><span class="subtitle" onclick="getDev_byType('Airplane')" style="cursor: pointer;">ADSB<
+/span></ons-col>
+                        <ons-col class="bignum"><span id="numZWave_d">-</span><br><span class="subtitle" onclick="getDev_byType('ZWave')" style="cursor: pointer;">Z-Wave</sp
+an></ons-col>
+                        <ons-col class="bignum"><span id="numMousejack_d">-</span><br><span class="subtitle" onclick="getDev_byType('KB/Mouse')" style="cursor: pointer;">Mou
+sejack</span></ons-col>
                         <ons-col class="bignum"><span id="numUAV_d">-</span><br><span class="subtitle" onclick="getDev_byType('UAV')" style="cursor: pointer;">UAV</span></ons-col>
                         <ons-col class="bignum"><span id="numUnkown_d">-</span><br><span class="subtitle">Unknown*</span></ons-col>
                     </ons-row>
