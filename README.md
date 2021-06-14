@@ -1,5 +1,10 @@
 # KismetMobileDashboard
 
+
+THIS IS OLD. The new kismet has websockets which would make building something like this easier.
+
+
+
 ![Image description](https://raw.githubusercontent.com/elkentaro/KismetMobileDashboard/master/kismetmobile.png)
 
 This is a major new rewrite of the mobile UI. Ideally I want to test it more but with #hackersummercamp around the corner, I just don't have the time. 
