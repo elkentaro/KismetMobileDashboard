@@ -224,8 +224,8 @@
                 var utime = Math.round((data['kismet.system.timestamp.sec'] - data['kismet.system.timestamp.start_sec']) / 60);
 
 
-                var now = (data['kismet.device.packets_rrd']['kismet.common.rrd.last_time'] - 1) % 60;
-                var packets = data['kismet.device.packets_rrd']['kismet.common.rrd.minute_vec'][now];
+                var now = (data['kismet.system.devices.rrd']['kismet.common.rrd.last_time'] - 1) % 60;
+                var packets = data['kismet.system.devices.rrd']['kismet.common.rrd.minute_vec'][now];
 
 
 
@@ -310,7 +310,7 @@
     function getDevices() {
 
         jQuery.ajax({
-                url: "../../devices/summary/devices.json",
+                url: "../../devices/views/all/devices.json",
                 type: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
@@ -552,7 +552,7 @@
 
 
         jQuery.ajax({
-                url: "../../devices/summary/devices.json",
+                url: "../../devices/views/all/devices.json",
                 type: "POST",
                 headers: {
 
